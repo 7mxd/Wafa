@@ -16,7 +16,7 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
 
 ## Live demo
 
-- **URL:** _(added after deploy)_
+- **URL:** **https://wafa-lake.vercel.app**
 - **Test accounts** (password `Wafa-demo-1` for both — or use the one-tap buttons on the sign-in page):
 
   | Name | Email | Role in the seed data |
