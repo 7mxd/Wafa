@@ -19,13 +19,14 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
 - **URL:** **https://wafa.7mxd.me** (also reachable at `https://wafa-lake.vercel.app`)
 - **Test accounts** (password `Wafa-demo-1` for both — or use the one-tap buttons on the sign-in page):
 
-  | Name | Email | Role in the seed data |
-  |------|-------|-----------------------|
-  | Aisha | `aisha@wafa.test` | mostly the borrower; lender on a couple |
-  | Omar | `omar@wafa.test` | the lender with a pending request to review |
+  | Name | Email |
+  |------|-------|
+  | Aisha | `aisha@wafa.test` |
+  | Omar | `omar@wafa.test` |
 
-Sign in as **Omar** to see the "1 to review" approver inbox; sign in as **Aisha** to see an active
-loan with the lender's IBAN to copy and a "I've transferred" button.
+Both accounts are seeded with loans on both sides (as borrower and as lender). Signing in as either
+one lets you walk the full request → approve/counter → transfer → confirm flow from both points of
+view.
 
 ## The flow
 
@@ -44,9 +45,11 @@ Every transition writes an immutable row to an audit timeline both parties can s
 
 ## Screenshots
 
-| Approver dashboard | Review a request | AI-assisted request |
+![Wafa landing — a promise, kept.](screenshots/00-landing-hero.png)
+
+| The dashboard ledger | A loan and its timeline | AI-assisted request |
 |---|---|---|
-| ![dashboard](screenshots/02-dashboard-omar.png) | ![review](screenshots/03-loan-pending-omar.png) | ![ai](screenshots/06-new-ai-filled.png) |
+| ![dashboard ledger](screenshots/02-dashboard-omar.png) | ![a loan in detail](screenshots/03-loan-pending-omar.png) | ![AI-assisted request](screenshots/06-new-ai-filled.png) |
 
 ## Tech stack
 
@@ -54,6 +57,26 @@ Every transition writes an immutable row to an audit timeline both parties can s
 - **Supabase** — Postgres, Auth, and Row-Level Security
 - **Claude Haiku 4.5** via **OpenRouter** for one light, server-side AI touch
 - **Tailwind CSS v4**
+
+## Design
+
+Wafa is bilingual by identity — **Wafa / وفاء** (faithfulness, keeping a promise) — and the interface
+is built to feel warm and trustworthy, not like a banking console.
+
+- **A fresh, bright canvas** with deep-blue + coral brand DNA and a joyful accent palette (teal, amber,
+  violet, mint), spent in committed colour moments — a gradient ledger band, mesh hero backdrops,
+  gradient CTAs — rather than spread evenly. Colours are OKLCH; neutrals carry a faint cool tint.
+- **Three typefaces, each with a job:** Hanken Grotesk (display + body), IBM Plex Sans Arabic (the وفاء
+  wordmark, `dir="rtl"`), and Geist Mono for every figure and timestamp (`tabular-nums`), so money
+  lines up like a ledger.
+- **Status speaks in colour:** pending → amber, countered → coral (your move), active → blue, awaiting
+  confirmation → violet, settled → mint.
+- **Instant, reduced-motion-safe UX:** every route paints an on-brand skeleton the moment you click it
+  (App Router `loading.tsx`), the per-request auth check is deduped, and all motion is disabled under
+  `prefers-reduced-motion`.
+
+The full system — tokens, typography, motion, and the project-specific bans — lives in
+[`DESIGN.md`](DESIGN.md); the product thinking and flow rationale live in [`PRODUCT.md`](PRODUCT.md).
 
 ## Architecture & security
 
