@@ -13,7 +13,7 @@ type StatusMeta = {
 export const STATUS_META: Record<LoanStatus, StatusMeta> = {
   pending: {
     label: "Pending",
-    pill: "bg-amber-100/70 text-amber-800 ring-amber-600/25",
+    pill: "bg-amber-tint text-amber-strong ring-amber-line",
     blurb: "Waiting on the lender to decide.",
   },
   countered: {
@@ -28,12 +28,12 @@ export const STATUS_META: Record<LoanStatus, StatusMeta> = {
   },
   repaid_pending: {
     label: "Awaiting confirmation",
-    pill: "bg-violet-100/70 text-violet-800 ring-violet-600/25",
+    pill: "bg-violet-tint text-violet-strong ring-violet-line",
     blurb: "Borrower marked it transferred; lender to confirm.",
   },
   settled: {
     label: "Settled",
-    pill: "bg-emerald-100 text-emerald-800 ring-emerald-700/25",
+    pill: "bg-mint-tint text-mint-strong ring-mint-line",
     blurb: "Repaid and confirmed. Done.",
   },
   declined: {
@@ -43,7 +43,7 @@ export const STATUS_META: Record<LoanStatus, StatusMeta> = {
   },
   withdrawn: {
     label: "Withdrawn",
-    pill: "bg-warm-200/70 text-warm-600 ring-warm-400/30",
+    pill: "bg-warm-200/70 text-warm-700 ring-warm-400/40",
     blurb: "The borrower withdrew this request.",
   },
 };

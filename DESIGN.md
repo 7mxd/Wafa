@@ -1,24 +1,26 @@
 # Wafa design system
 
-Tokens live in [`app/globals.css`](app/globals.css) (`@theme`); the shared control vocabulary lives in [`lib/ui.ts`](lib/ui.ts). Colours are OKLCH; neutrals are tinted toward the paper hue (never pure `#000`/`#fff`).
+Tokens live in [`app/globals.css`](app/globals.css) (`@theme`); the shared control vocabulary lives in [`lib/ui.ts`](lib/ui.ts). Colours are OKLCH; neutrals carry a faint cool tint (never pure `#000`/`#fff`).
 
 ## Color
 
-Strategy: **committed-restrained.** Warm paper carries every surface, deep blue carries structure and primary action, coral is the ≤10% accent.
+Strategy: a **fresh, bright canvas** with deep-blue + coral brand DNA and a joyful accent palette, used in committed colour moments (a gradient ledger band, mesh hero backdrops, gradient CTAs) rather than spread evenly. Trustworthy for fintech: no purple-blue gradients, no gradient text, solid white on drenched bands.
 
-| Token | OKLCH | ~Hex | Role |
-|---|---|---|---|
-| `--color-sand` | `0.927 0.008 79` | `#e9e6df` | App shell / page background |
-| `--color-paper` | `0.985 0.004 85` | `#faf9f7` | Quiet panels, second layer |
-| `--color-card` | `0.997 0.0015 85` | near-white | Cards floating on sand |
-| `--color-ink` | `0.25 0.012 65` | warm near-black | Text |
-| `--color-brand` | `0.375 0.135 264` | `#243a8a` | Deep blue: primary, active, trust |
-| `--color-coral` | `0.665 0.182 22` | `#ef5650` | Accent: the _waw_, attention, "your turn" |
-| `--color-warm-50…900` | hue ~70 | — | Neutral scale (replaces stone) |
+| Token | OKLCH | Role |
+|---|---|---|
+| `--color-sand` | `0.981 0.004 240` | App canvas (bright) |
+| `--color-paper` | `0.966 0.006 242` | Quiet panels, second layer |
+| `--color-card` | `0.996 0.0015 240` | Cards, near-white |
+| `--color-ink` | `0.22 0.013 262` | Cool near-black text |
+| `--color-brand` | `0.375 0.135 264` | Deep blue ≈ `#243a8a` (logo, text, active) |
+| `--color-brand-bright` | `0.55 0.19 258` | Vivid azure: gradients, focus, energy |
+| `--color-coral` | `0.665 0.182 22` | Coral ≈ `#ef5650`: the _waw_, attention |
+| `--color-teal / -amber / -violet / -mint` | — | Joyful accents: avatars, categories, status |
+| `--color-warm-50…900` | hue ~250 | Cool-neutral scale |
 
-Brand and coral each ship `-strong` (hover/press), `-tint` (wash backgrounds), and `-line` (hairline rings).
+Every colour ships `-strong` (text/hover on a tint), `-tint` (wash background), and `-line` (hairline ring). Gradient helpers in `globals.css`: `.grad-brand` (deep → bright blue), `.grad-sunset` (coral → amber), `.grad-primary` (button fill), `.mesh-joy` (three-colour aura backdrop).
 
-**Status semantics** (`lib/status.ts`): pending → amber, countered → **coral** (needs your response), active → **brand blue** (agreed, outstanding), awaiting confirmation → violet, settled → **green** (the one place green is allowed: a positive terminal), declined → rose, withdrawn → warm neutral.
+**Status semantics** (`lib/status.ts`): pending → amber, countered → **coral** (your move), active → **brand blue** (agreed, outstanding), awaiting confirmation → violet, settled → **mint** (positive terminal), declined → rose, withdrawn → neutral.
 
 ## Typography
 
@@ -50,6 +52,6 @@ Every interactive control has hover, focus (`.focus-ring`, a 2px brand outline),
 
 ## Bans (project-specific, on top of the shared ones)
 
-- No green as a primary or accent. Green means **settled** and nothing else.
+- Green (mint) means **settled** only; teal is the fresh accent and stays distinct from it.
 - No em dashes in copy. Use periods, colons, or commas.
 - No banking-table density. This is a personal ledger, not a finance console.

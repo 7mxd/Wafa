@@ -6,6 +6,9 @@
 const PALETTES = [
   "bg-brand-tint text-brand ring-brand-line",
   "bg-coral-tint text-coral-strong ring-coral-line",
+  "bg-teal-tint text-teal-strong ring-teal-line",
+  "bg-amber-tint text-amber-strong ring-amber-line",
+  "bg-violet-tint text-violet-strong ring-violet-line",
 ];
 
 export function Avatar({ name, size = 36 }: { name: string; size?: number }) {

@@ -17,7 +17,7 @@ export function Money({
   const figure = formatAmount(signed ? Math.abs(amount) : amount);
   return (
     <span className={`font-mono tabular-nums ${className}`}>
-      <span className="mr-1 align-[0.5px] text-[0.6em] font-semibold tracking-wide text-warm-400">
+      <span className="mr-1 align-[0.5px] text-[0.6em] font-semibold tracking-wide opacity-60">
         AED
       </span>
       {sign}
