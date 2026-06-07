@@ -1,5 +1,5 @@
 -- Wafa — demo seed: two test accounts + loans across every status.
--- Run after the migrations (0001–0003). Idempotent for users; loans are reset.
+-- Run after the migrations (0001–0006). Idempotent for users; loans are reset.
 -- Test accounts: aisha@wafa.test / omar@wafa.test, password "Wafa-demo-1".
 
 -- 1) Auth users (GoTrue email/password) + identities. Trigger creates profiles.
@@ -35,6 +35,13 @@ on conflict do nothing;
 -- IBANs (normalized: no spaces, uppercase).
 update public.profiles set iban = 'AE070331234567890123456' where id = '11111111-1111-1111-1111-111111111111';
 update public.profiles set iban = 'AE120030000012345678901' where id = '22222222-2222-2222-2222-222222222222';
+
+-- Contacts: each demo user keeps the other in their personal list, so the
+-- new-request picker is populated for both.
+insert into public.contacts (owner_id, contact_id) values
+  ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222'),
+  ('22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111')
+on conflict do nothing;
 
 -- 2) Loans across every status + matching audit timelines (dates relative to today).
 delete from public.loan_events where loan_id in (select id from public.loans);

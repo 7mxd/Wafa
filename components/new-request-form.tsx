@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createRequest } from "@/lib/actions/loans";
 import { inputClass, labelClass, btnPrimary, btnCoral } from "@/lib/ui";
@@ -30,9 +31,16 @@ export function NewRequestForm({ people }: { people: Person[] }) {
 
   if (people.length === 0) {
     return (
-      <p className="text-sm text-warm-500">
-        No one else is on Wafa yet to ask. Invite a friend to sign up first.
-      </p>
+      <div className="space-y-2 text-sm text-warm-500">
+        <p>You haven’t added anyone to ask yet.</p>
+        <Link
+          href="/settings"
+          className="inline-flex items-center gap-1 rounded font-semibold text-brand transition hover:text-brand-bright focus-ring"
+        >
+          Add someone by email
+          <span aria-hidden>→</span>
+        </Link>
+      </div>
     );
   }
 

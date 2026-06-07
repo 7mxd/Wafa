@@ -1,9 +1,16 @@
 import { getMyIban } from "@/lib/actions/profile";
+import { getContacts } from "@/lib/loans";
+import { createClient } from "@/lib/supabase/server";
 import { IbanForm } from "@/components/iban-form";
+import { ContactsManager } from "@/components/contacts-manager";
 import { BackLink } from "@/components/back-link";
 
 export default async function SettingsPage() {
-  const iban = await getMyIban();
+  const supabase = await createClient();
+  const [iban, contacts] = await Promise.all([
+    getMyIban(),
+    getContacts(supabase),
+  ]);
 
   return (
     <main className="mx-auto max-w-xl px-5 py-7 sm:px-6 sm:py-8">
@@ -17,10 +24,21 @@ export default async function SettingsPage() {
         <h2 className="text-sm font-semibold text-ink">Your IBAN</h2>
         <p className="mt-1 text-sm leading-relaxed text-warm-500">
           Shared with a borrower only after you approve their loan, so they can
-          transfer your repayment. It is never shown in the people directory.
+          transfer your repayment. It stays private otherwise.
         </p>
         <div className="mt-4">
           <IbanForm initialIban={iban} />
+        </div>
+      </section>
+
+      <section className="mt-5 rounded-2xl border border-warm-200 bg-card p-5 shadow-[0_10px_30px_-20px_rgba(36,58,138,0.22)] sm:p-6">
+        <h2 className="text-sm font-semibold text-ink">Your people</h2>
+        <p className="mt-1 text-sm leading-relaxed text-warm-500">
+          The people you can ask for a loan. Add anyone by email and they stay
+          here for next time.
+        </p>
+        <div className="mt-4">
+          <ContactsManager initial={contacts} />
         </div>
       </section>
     </main>

@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      contacts: {
+        Row: {
+          contact_id: string
+          created_at: string
+          owner_id: string
+        }
+        Insert: {
+          contact_id: string
+          created_at?: string
+          owner_id: string
+        }
+        Update: {
+          contact_id?: string
+          created_at?: string
+          owner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contacts_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contacts_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contacts_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       loan_events: {
         Row: {
           actor_id: string | null
@@ -196,6 +243,7 @@ export type Database = {
     }
     Functions: {
       accept_counter: { Args: { p_loan_id: string }; Returns: undefined }
+      add_contact_by_email: { Args: { p_email: string }; Returns: string }
       approve_loan: { Args: { p_loan_id: string }; Returns: undefined }
       confirm_settled: { Args: { p_loan_id: string }; Returns: undefined }
       counter_loan: {
@@ -225,6 +273,7 @@ export type Database = {
       get_lender_iban: { Args: { p_loan_id: string }; Returns: string }
       get_my_iban: { Args: Record<PropertyKey, never>; Returns: string }
       mark_transferred: { Args: { p_loan_id: string }; Returns: undefined }
+      remove_contact: { Args: { p_contact_id: string }; Returns: undefined }
       set_iban: { Args: { p_iban: string }; Returns: undefined }
       withdraw_loan: { Args: { p_loan_id: string }; Returns: undefined }
     }

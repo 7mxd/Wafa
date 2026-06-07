@@ -99,19 +99,29 @@ export async function getLoanEvents(
   return data ?? [];
 }
 
-/** Other users the signed-in user can request from (the lender picker). */
-export async function getOtherProfiles(
+/** The signed-in user's contacts (their personal list) for the lender picker,
+ *  name-resolved and in the order they were added. RLS scopes the `contacts`
+ *  read to the owner. */
+export async function getContacts(
   supabase: DB,
-  userId: string,
 ): Promise<{ id: string; display_name: string }[]> {
-  const { data, error } = await supabase
+  const { data: rows, error } = await supabase
+    .from("contacts")
+    .select("contact_id")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  const ids = (rows ?? []).map((r) => r.contact_id);
+  if (ids.length === 0) return [];
+
+  const { data, error: nameErr } = await supabase
     .from("public_profiles")
     .select("id, display_name")
-    .neq("id", userId)
-    .order("display_name", { ascending: true });
-  if (error) throw error;
-  return (data ?? []).map((p) => ({
-    id: p.id as string,
-    display_name: p.display_name ?? "Someone",
-  }));
+    .in("id", ids);
+  if (nameErr) throw nameErr;
+  const names = new Map(
+    (data ?? []).map((p) => [p.id as string, p.display_name ?? "Someone"]),
+  );
+  return ids
+    .filter((id) => names.has(id))
+    .map((id) => ({ id, display_name: names.get(id)! }));
 }
