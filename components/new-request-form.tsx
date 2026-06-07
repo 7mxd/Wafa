@@ -3,11 +3,9 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createRequest } from "@/lib/actions/loans";
+import { inputClass, labelClass, btnPrimary, btnCoral } from "@/lib/ui";
 
 type Person = { id: string; display_name: string };
-
-const inputCls =
-  "mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
 
 function todayISO() {
   const d = new Date();
@@ -32,7 +30,7 @@ export function NewRequestForm({ people }: { people: Person[] }) {
 
   if (people.length === 0) {
     return (
-      <p className="text-sm text-stone-500">
+      <p className="text-sm text-warm-500">
         No one else is on Wafa yet to ask. Invite a friend to sign up first.
       </p>
     );
@@ -54,12 +52,12 @@ export function NewRequestForm({ people }: { people: Person[] }) {
         setReason(json.data.reason);
         setDueDate(json.data.proposed_due_date || "");
         setAiSummary(json.data.summary || null);
-        setAiNote("Filled in below from your description — edit anything.");
+        setAiNote("Filled in below from your description. Edit anything.");
       } else {
-        setAiNote("Couldn’t structure that — just fill it in below.");
+        setAiNote("Couldn’t structure that. Just fill it in below.");
       }
     } catch {
-      setAiNote("Couldn’t structure that — just fill it in below.");
+      setAiNote("Couldn’t structure that. Just fill it in below.");
     } finally {
       setAiLoading(false);
     }
@@ -87,36 +85,50 @@ export function NewRequestForm({ people }: { people: Person[] }) {
   return (
     <div className="space-y-5">
       {/* AI intake */}
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
-        <label className="text-xs font-medium text-emerald-800">
+      <div className="rounded-2xl border border-brand-line bg-brand-tint/55 p-4">
+        <label
+          htmlFor="ai-text"
+          className="flex items-center gap-1.5 text-xs font-semibold text-brand"
+        >
+          <Sparkle />
           Describe it in your own words
         </label>
         <textarea
+          id="ai-text"
           value={aiText}
           onChange={(e) => setAiText(e.target.value)}
           rows={2}
-          className="mt-1 w-full resize-none rounded-lg border border-emerald-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+          className="mt-2 w-full resize-none rounded-xl border border-brand-line bg-card px-3 py-2.5 text-sm text-ink outline-none transition placeholder:text-warm-400 focus:border-brand focus:ring-2 focus:ring-brand/20"
           placeholder="e.g. need 400 for a car repair, pay you back in two weeks"
         />
-        <div className="mt-2 flex items-center justify-between gap-2">
+        <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
             onClick={structureWithAI}
             disabled={aiLoading || !aiText.trim()}
-            className="shrink-0 whitespace-nowrap rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
+            className={`${btnCoral} px-3 py-1.5`}
           >
-            {aiLoading ? "Structuring…" : "Structure with AI ✨"}
+            {aiLoading ? (
+              "Structuring…"
+            ) : (
+              <>
+                <Sparkle />
+                Structure with AI
+              </>
+            )}
           </button>
-          {aiNote && <span className="text-xs text-emerald-700">{aiNote}</span>}
+          {aiNote && <span className="text-xs text-brand">{aiNote}</span>}
         </div>
       </div>
 
       <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-stone-200" />
+        <div className="absolute inset-0 flex items-center" aria-hidden>
+          <div className="w-full border-t border-warm-200" />
         </div>
         <div className="relative flex justify-center">
-          <span className="bg-white px-2 text-xs text-stone-400">or fill it in</span>
+          <span className="bg-card px-2.5 text-xs text-warm-400">
+            or fill it in
+          </span>
         </div>
       </div>
 
@@ -128,12 +140,12 @@ export function NewRequestForm({ people }: { people: Person[] }) {
         }}
         className="space-y-4"
       >
-        <label className="block">
-          <span className="text-xs font-medium text-stone-500">Ask</span>
+        <label className="block space-y-1.5">
+          <span className={labelClass}>Who are you asking?</span>
           <select
             value={lenderId}
             onChange={(e) => setLenderId(e.target.value)}
-            className={inputCls}
+            className={inputClass}
           >
             {people.map((p) => (
               <option key={p.id} value={p.id}>
@@ -143,54 +155,72 @@ export function NewRequestForm({ people }: { people: Person[] }) {
           </select>
         </label>
 
-        <label className="block">
-          <span className="text-xs font-medium text-stone-500">Amount (AED)</span>
-          <input
-            type="number"
-            min="1"
-            step="0.01"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className={inputCls}
-            placeholder="500"
-          />
+        <label className="block space-y-1.5">
+          <span className={labelClass}>Amount</span>
+          <div className="relative">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm font-medium text-warm-400">
+              AED
+            </span>
+            <input
+              type="number"
+              min="1"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className={`${inputClass} pl-12 font-mono tabular-nums`}
+              placeholder="500"
+            />
+          </div>
         </label>
 
-        <label className="block">
-          <span className="text-xs font-medium text-stone-500">What for?</span>
+        <label className="block space-y-1.5">
+          <span className={labelClass}>What for?</span>
           <input
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            className={inputCls}
+            className={inputClass}
             placeholder="Car repair before the weekend"
           />
         </label>
 
-        <label className="block">
-          <span className="text-xs font-medium text-stone-500">
-            Pay back by (optional)
-          </span>
+        <label className="block space-y-1.5">
+          <span className={labelClass}>Pay back by (optional)</span>
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className={inputCls}
+            className={inputClass}
           />
         </label>
 
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {error && (
+          <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+            {error}
+          </p>
+        )}
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
-        >
+        <button type="submit" disabled={pending} className={`${btnPrimary} w-full`}>
           {pending ? "Sending…" : "Send request"}
         </button>
-        <p className="text-center text-xs text-stone-400">
-          Interest-free by design — you’ll never owe more than you borrow.
+        <p className="text-center text-xs text-warm-400">
+          Interest-free by design. You’ll never owe more than you borrow.
         </p>
       </form>
     </div>
+  );
+}
+
+function Sparkle() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M12 2.5c.4 3.9 1.6 5.1 5.5 5.5-3.9.4-5.1 1.6-5.5 5.5-.4-3.9-1.6-5.1-5.5-5.5 3.9-.4 5.1-1.6 5.5-5.5Z" />
+      <path d="M18.5 13c.2 2 .8 2.6 2.8 2.8-2 .2-2.6.8-2.8 2.8-.2-2-.8-2.6-2.8-2.8 2-.2 2.6-.8 2.8-2.8Z" />
+    </svg>
   );
 }

@@ -1,10 +1,14 @@
-/** Format an amount as AED, e.g. 1200 -> "AED 1,200". */
-export function formatAed(amount: number): string {
-  const n = new Intl.NumberFormat("en-US", {
+/** Group an amount without the currency, e.g. 1200 -> "1,200". */
+export function formatAmount(amount: number): string {
+  return new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(amount);
-  return `AED ${n}`;
+}
+
+/** Format an amount as AED, e.g. 1200 -> "AED 1,200". */
+export function formatAed(amount: number): string {
+  return `AED ${formatAmount(amount)}`;
 }
 
 /** Format an ISO date (or date string) as "20 Jun 2026". */
@@ -52,8 +56,8 @@ export function dueCountdown(due: string | null): {
 }
 
 export const COUNTDOWN_TONE_CLASS: Record<CountdownTone, string> = {
-  ok: "text-stone-500",
-  soon: "text-amber-600",
-  over: "text-rose-600",
-  none: "text-stone-400",
+  ok: "text-warm-500",
+  soon: "text-amber-700",
+  over: "text-coral-strong",
+  none: "text-warm-400",
 };

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { LoanView } from "@/lib/loans";
 import { formatAed, formatDate, formatIban } from "@/lib/format";
 import { CopyButton } from "@/components/copy-button";
+import { inputClass, btnPrimary, btnSecondary, btnDanger } from "@/lib/ui";
 import {
   acceptCounter,
   approveLoan,
@@ -16,8 +17,7 @@ import {
   type ActionResult,
 } from "@/lib/actions/loans";
 
-const inputCls =
-  "mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
+const inputCls = `mt-1 ${inputClass}`;
 
 export function LoanActions({
   loan,
@@ -54,7 +54,7 @@ export function LoanActions({
   return (
     <div className="space-y-3">
       {error && (
-        <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+        <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
           {error}
         </p>
       )}
@@ -184,30 +184,21 @@ export function LoanActions({
 
 function Primary({ children, ...rest }: ButtonProps) {
   return (
-    <button
-      {...rest}
-      className="rounded-lg bg-emerald-600 px-3.5 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
-    >
+    <button {...rest} className={btnPrimary}>
       {children}
     </button>
   );
 }
 function Secondary({ children, ...rest }: ButtonProps) {
   return (
-    <button
-      {...rest}
-      className="rounded-lg border border-stone-300 px-3.5 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50 disabled:opacity-60"
-    >
+    <button {...rest} className={btnSecondary}>
       {children}
     </button>
   );
 }
 function Danger({ children, ...rest }: ButtonProps) {
   return (
-    <button
-      {...rest}
-      className="rounded-lg border border-rose-200 px-3.5 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-50 disabled:opacity-60"
-    >
+    <button {...rest} className={btnDanger}>
       {children}
     </button>
   );
@@ -228,9 +219,11 @@ function Waiting({
 }) {
   const cls =
     tone === "good"
-      ? "bg-emerald-50 text-emerald-700"
-      : "bg-stone-50 text-stone-500";
-  return <p className={`rounded-lg px-3 py-2 text-sm ${cls}`}>{children}</p>;
+      ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+      : "border-warm-200 bg-paper text-warm-600";
+  return (
+    <p className={`rounded-xl border px-3 py-2.5 text-sm ${cls}`}>{children}</p>
+  );
 }
 
 function Panel({
@@ -243,13 +236,13 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <div className="space-y-3 rounded-xl border border-stone-200 bg-white p-4">
+    <div className="space-y-3 rounded-xl border border-warm-200 bg-paper p-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-stone-900">{title}</p>
+        <p className="text-sm font-semibold text-ink">{title}</p>
         <button
           type="button"
           onClick={onCancel}
-          className="text-xs text-stone-400 hover:text-stone-700"
+          className="rounded text-xs font-medium text-warm-400 transition hover:text-warm-700 focus-ring"
         >
           Cancel
         </button>
@@ -262,7 +255,7 @@ function Panel({
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs font-medium text-stone-500">{label}</span>
+      <span className="text-xs font-medium text-warm-500">{label}</span>
       {children}
     </label>
   );
@@ -270,19 +263,19 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 
 function IbanBlock({ iban, name }: { iban: string | null; name: string }) {
   return (
-    <div className="rounded-xl border border-stone-200 bg-stone-50 p-3">
-      <p className="text-xs font-medium text-stone-500">
+    <div className="rounded-xl border border-warm-200 bg-paper p-3.5">
+      <p className="text-xs font-medium uppercase tracking-wide text-warm-400">
         Transfer to {name} to settle
       </p>
       {iban ? (
-        <div className="mt-1.5 flex items-center justify-between gap-3">
-          <code className="truncate font-mono text-sm text-stone-900">
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <code className="truncate font-mono text-sm text-ink">
             {formatIban(iban)}
           </code>
           <CopyButton value={iban} label="Copy IBAN" />
         </div>
       ) : (
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1.5 text-sm text-warm-400">
           {name} hasn’t added an IBAN yet.
         </p>
       )}

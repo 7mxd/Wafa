@@ -22,7 +22,11 @@ export function CopyButton({
           // clipboard unavailable — no-op
         }
       }}
-      className="shrink-0 rounded-md border border-stone-300 px-2.5 py-1 text-xs font-medium text-stone-700 transition hover:bg-white"
+      className={`shrink-0 rounded-md border px-2.5 py-1 text-xs font-medium transition focus-ring ${
+        copied
+          ? "border-brand-line bg-brand-tint text-brand"
+          : "border-warm-300 text-warm-700 hover:border-warm-400 hover:bg-paper"
+      }`}
     >
       {copied ? "Copied ✓" : label}
     </button>

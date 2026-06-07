@@ -31,18 +31,22 @@ export function AuditTimeline({
           <li key={e.id} className="flex gap-3">
             <div className="flex flex-col items-center">
               <span
-                className={`mt-1 h-2 w-2 shrink-0 rounded-full ${last ? "bg-emerald-500" : "bg-stone-300"}`}
+                className={`mt-1 shrink-0 rounded-full ${
+                  last
+                    ? "h-2.5 w-2.5 bg-coral ring-4 ring-coral/15"
+                    : "h-2 w-2 bg-warm-300"
+                }`}
               />
-              {!last && <span className="mt-1 w-px flex-1 bg-stone-200" />}
+              {!last && <span className="mt-1 w-px flex-1 bg-warm-200" />}
             </div>
             <div className="min-w-0 pb-1">
-              <p className="text-sm text-stone-700">
-                <span className="font-medium text-stone-900">{who}</span> {verb}
+              <p className="text-sm text-warm-700">
+                <span className="font-semibold text-ink">{who}</span> {verb}
               </p>
               {e.note && (
-                <p className="mt-0.5 text-sm text-stone-500">“{e.note}”</p>
+                <p className="mt-0.5 text-sm text-warm-500">“{e.note}”</p>
               )}
-              <p className="mt-0.5 text-xs text-stone-400">
+              <p className="mt-0.5 font-mono text-xs text-warm-400">
                 {formatDateTime(e.created_at)}
               </p>
             </div>
