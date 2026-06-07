@@ -10,30 +10,38 @@ const OUT = path.join(import.meta.dirname, "..", "screenshots");
 fs.mkdirSync(OUT, { recursive: true });
 
 const browser = await chromium.launch();
+const DESKTOP = { width: 1024, height: 820, deviceScaleFactor: 2 };
+const MOBILE = { width: 402, height: 874, deviceScaleFactor: 2 };
 
 async function shot(page, name) {
   await page.screenshot({ path: path.join(OUT, name), fullPage: true });
   console.log("✓", name);
 }
 
-async function login(name) {
+async function login(name, viewport = DESKTOP) {
   const ctx = await browser.newContext({
-    viewport: { width: 1024, height: 820 },
-    deviceScaleFactor: 2,
+    viewport: { width: viewport.width, height: viewport.height },
+    deviceScaleFactor: viewport.deviceScaleFactor,
   });
   const page = await ctx.newPage();
   await page.goto(`${BASE}/login`, { waitUntil: "networkidle" });
   if (name === null) return { ctx, page };
-  await page.getByRole("button", { name: `Sign in as ${name}` }).click();
-  await page.waitForURL("**/dashboard", { timeout: 20000 });
+  // Demo-account chip: accessible name is "<Name> Demo"
+  await page.getByRole("button", { name, exact: false }).click();
+  await page.waitForURL("**/dashboard", { timeout: 30000 });
   await page.waitForLoadState("networkidle");
   return { ctx, page };
 }
 
-// 1) Login screen
+// 1) Login screen (desktop + mobile)
 {
   const { ctx, page } = await login(null);
   await shot(page, "01-login.png");
+  await ctx.close();
+}
+{
+  const { ctx, page } = await login(null, MOBILE);
+  await shot(page, "01b-login-mobile.png");
   await ctx.close();
 }
 
@@ -48,6 +56,13 @@ async function login(name) {
   await page.waitForURL("**/loans/**");
   await page.waitForLoadState("networkidle");
   await shot(page, "03-loan-pending-omar.png");
+  await ctx.close();
+}
+
+// 2b) Omar dashboard on mobile
+{
+  const { ctx, page } = await login("Omar", MOBILE);
+  await shot(page, "02b-dashboard-omar-mobile.png");
   await ctx.close();
 }
 
