@@ -33,6 +33,22 @@ async function login(name, viewport = DESKTOP) {
   return { ctx, page };
 }
 
+// 0) Landing page (public, logged-out)
+for (const [name, vp] of [
+  ["00-landing.png", DESKTOP],
+  ["00b-landing-mobile.png", MOBILE],
+]) {
+  const ctx = await browser.newContext({
+    viewport: { width: vp.width, height: vp.height },
+    deviceScaleFactor: vp.deviceScaleFactor,
+  });
+  const page = await ctx.newPage();
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1200);
+  await shot(page, name);
+  await ctx.close();
+}
+
 // 1) Login screen (desktop + mobile)
 {
   const { ctx, page } = await login(null);
