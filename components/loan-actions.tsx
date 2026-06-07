@@ -12,10 +12,12 @@ import {
   confirmSettled,
   counterLoan,
   declineLoan,
+  deleteLoan,
   markTransferred,
   withdrawLoan,
   type ActionResult,
 } from "@/lib/actions/loans";
+import { TERMINAL_STATUSES } from "@/lib/status";
 
 const inputCls = `mt-1 ${inputClass}`;
 
@@ -29,7 +31,9 @@ export function LoanActions({
   const router = useRouter();
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [panel, setPanel] = useState<"none" | "counter" | "decline">("none");
+  const [panel, setPanel] = useState<
+    "none" | "counter" | "decline" | "delete"
+  >("none");
 
   const [cAmount, setCAmount] = useState(String(loan.amount));
   const [cDue, setCDue] = useState(loan.due_date ?? "");
@@ -45,6 +49,15 @@ export function LoanActions({
         setPanel("none");
         router.refresh();
       }
+    });
+  }
+
+  function remove() {
+    setError(null);
+    start(async () => {
+      const res = await deleteLoan(loan.id);
+      if (res?.error) setError(res.error);
+      else router.push("/dashboard");
     });
   }
 
@@ -176,6 +189,32 @@ export function LoanActions({
         </Waiting>
       )}
       {loan.status === "withdrawn" && <Waiting>Withdrawn by the borrower.</Waiting>}
+
+      {/* delete — only finished loans that carry no remaining value */}
+      {TERMINAL_STATUSES.includes(loan.status) &&
+        (panel === "delete" ? (
+          <Panel title="Delete this record?" onCancel={() => setPanel("none")}>
+            <p className="text-sm leading-relaxed text-warm-600">
+              This permanently removes the loan and its timeline for both you and{" "}
+              {loan.counterpartyName}. It can’t be undone.
+            </p>
+            <Danger disabled={pending} onClick={remove}>
+              Delete permanently
+            </Danger>
+          </Panel>
+        ) : (
+          <div className="pt-1">
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => setPanel("delete")}
+              className="inline-flex items-center gap-1.5 rounded text-xs font-medium text-warm-400 transition hover:text-rose-600 focus-ring disabled:opacity-60"
+            >
+              <TrashIcon />
+              Delete this record
+            </button>
+          </div>
+        ))}
     </div>
   );
 }
@@ -258,6 +297,25 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
       <span className="text-xs font-medium text-warm-500">{label}</span>
       {children}
     </label>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    </svg>
   );
 }
 

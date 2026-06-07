@@ -103,3 +103,13 @@ export async function confirmSettled(loanId: string): Promise<ActionResult> {
   refresh(loanId);
   return {};
 }
+
+/** Permanently delete a finished loan (settled | declined | withdrawn). The RPC
+ *  enforces caller-is-party and the terminal-status rule; events cascade away. */
+export async function deleteLoan(loanId: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("delete_loan", { p_loan_id: loanId });
+  if (error) return { error: error.message };
+  refresh();
+  return {};
+}

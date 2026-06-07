@@ -86,7 +86,9 @@ The interesting part is the data layer. The security model does not rely on the 
   `accept_counter`, `mark_transferred`, `confirm_settled`, …). Each asserts the caller's role and the
   exact current status, then performs the `UPDATE` **and** the audit-event `INSERT` atomically.
 - **`loans` has no `INSERT`/`UPDATE`/`DELETE` policy at all** — direct writes are denied; the RPCs are
-  the only write path. This sidesteps the classic mis-scoped-RLS-`UPDATE` bug.
+  the only write path. This sidesteps the classic mis-scoped-RLS-`UPDATE` bug. Deletion is no
+  exception: a finished loan is removed through a `delete_loan` definer RPC, allowed only to the two
+  parties and only on a terminal status (`settled` / `declined` / `withdrawn`).
 - **RLS** scopes every read to the loan's two parties (`auth.uid() in (borrower_id, lender_id)`).
 - **IBANs are column-protected.** `SELECT` on `profiles.iban` is revoked from clients; the lender's
   IBAN is reachable only through a `get_lender_iban()` definer RPC that returns it **only** to the

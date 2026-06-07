@@ -221,6 +221,7 @@ export type Database = {
         Args: { p_decline_reason?: string; p_loan_id: string }
         Returns: undefined
       }
+      delete_loan: { Args: { p_loan_id: string }; Returns: undefined }
       get_lender_iban: { Args: { p_loan_id: string }; Returns: string }
       mark_transferred: { Args: { p_loan_id: string }; Returns: undefined }
       withdraw_loan: { Args: { p_loan_id: string }; Returns: undefined }
