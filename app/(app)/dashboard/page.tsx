@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { getDashboardLoans, type LoanView } from "@/lib/loans";
 import { LoanCard } from "@/components/loan-card";
 import { Money } from "@/components/money";
@@ -14,10 +14,7 @@ const sumOutstanding = (loans: LoanView[]) =>
   loans.filter(isOutstanding).reduce((total, l) => total + l.amount, 0);
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [supabase, user] = await Promise.all([createClient(), getCurrentUser()]);
   const { owedToMe, iOwe } = await getDashboardLoans(supabase, user!.id);
 
   const hasAny = owedToMe.length + iOwe.length > 0;

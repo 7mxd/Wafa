@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { getLoan, getLoanEvents } from "@/lib/loans";
 import { StatusPill } from "@/components/status-pill";
 import { InterestFreeBadge } from "@/components/interest-free-badge";
@@ -22,13 +22,12 @@ export default async function LoanDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const loan = await getLoan(supabase, user!.id, id);
+  const [supabase, user] = await Promise.all([createClient(), getCurrentUser()]);
+  const [loan, events] = await Promise.all([
+    getLoan(supabase, user!.id, id),
+    getLoanEvents(supabase, id),
+  ]);
   if (!loan) notFound();
-  const events = await getLoanEvents(supabase, id);
 
   let lenderIban: string | null = null;
   if (

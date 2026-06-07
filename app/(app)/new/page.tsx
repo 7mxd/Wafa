@@ -1,13 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { getOtherProfiles } from "@/lib/loans";
 import { NewRequestForm } from "@/components/new-request-form";
 import { BackLink } from "@/components/back-link";
 
 export default async function NewRequestPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [supabase, user] = await Promise.all([createClient(), getCurrentUser()]);
   const people = await getOtherProfiles(supabase, user!.id);
 
   return (

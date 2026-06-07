@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import type { Database } from "@/lib/database.types";
 
 /**
@@ -31,3 +32,16 @@ export async function createClient() {
     },
   );
 }
+
+/**
+ * The signed-in user, or null. Wrapped in React `cache()` so that the (app)
+ * layout guard and the page rendered inside it share a single Supabase Auth
+ * round-trip per request instead of each calling `getUser()` separately.
+ */
+export const getCurrentUser = cache(async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+});
