@@ -97,9 +97,12 @@ The interesting part is the data layer. The security model does not rely on the 
   unreachable. No counter-count column needed.
 - **Interest-free is enforced by absence** — there is deliberately no interest/markup column anywhere.
 
-Supabase security advisors report **zero lints**, and an in-DB test harness
-([`supabase/tests.sql`](supabase/tests.sql)) verifies **11/11** guarantees (wrong-party rejects,
-wrong-status rejects, single-bounce, IBAN access rules, RLS isolation, direct-write denial, …).
+Supabase security advisors report **no error-level lints**. The remaining warnings are by design:
+every write runs through a `SECURITY DEFINER` RPC (the deliberate write boundary), which the linter
+flags generically, plus leaked-password protection, a Pro-plan toggle left off on the free tier. An
+in-DB test harness ([`supabase/tests.sql`](supabase/tests.sql)) verifies **11/11** guarantees
+(wrong-party rejects, wrong-status rejects, single-bounce, IBAN access rules, RLS isolation,
+direct-write denial, …).
 
 The migrations, seed, and tests live in [`supabase/`](supabase/).
 
