@@ -4,6 +4,7 @@ import { useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { LoanView } from "@/lib/loans";
 import { formatAed, formatDate, formatIban } from "@/lib/format";
+import { type PaymentDetails } from "@/lib/payment";
 import { CopyButton } from "@/components/copy-button";
 import { inputClass, btnPrimary, btnSecondary, btnDanger } from "@/lib/ui";
 import {
@@ -23,10 +24,10 @@ const inputCls = `mt-1 ${inputClass}`;
 
 export function LoanActions({
   loan,
-  lenderIban,
+  lenderPayment,
 }: {
   loan: LoanView;
-  lenderIban: string | null;
+  lenderPayment: PaymentDetails | null;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -156,7 +157,10 @@ export function LoanActions({
       {/* active */}
       {loan.status === "active" && isBorrower && (
         <div className="space-y-3">
-          <IbanBlock iban={lenderIban} name={loan.counterpartyName} />
+          <PaymentDetailsBlock
+            payment={lenderPayment}
+            name={loan.counterpartyName}
+          />
           <Primary disabled={pending} onClick={() => run(() => markTransferred(loan.id))}>
             I’ve transferred
           </Primary>
@@ -319,23 +323,71 @@ function TrashIcon() {
   );
 }
 
-function IbanBlock({ iban, name }: { iban: string | null; name: string }) {
+function PaymentDetailsBlock({
+  payment,
+  name,
+}: {
+  payment: PaymentDetails | null;
+  name: string;
+}) {
+  const rows: {
+    label: string;
+    display: string;
+    copyValue?: string;
+    mono?: boolean;
+  }[] = [];
+  if (payment?.account_holder_name)
+    rows.push({ label: "Account holder", display: payment.account_holder_name });
+  if (payment?.bank_name) rows.push({ label: "Bank", display: payment.bank_name });
+  if (payment?.iban)
+    rows.push({
+      label: "IBAN",
+      display: formatIban(payment.iban),
+      copyValue: payment.iban,
+      mono: true,
+    });
+  if (payment?.account_number)
+    rows.push({
+      label: "Account number",
+      display: payment.account_number,
+      copyValue: payment.account_number,
+      mono: true,
+    });
+  if (payment?.swift_bic)
+    rows.push({
+      label: "SWIFT / BIC",
+      display: payment.swift_bic,
+      copyValue: payment.swift_bic,
+      mono: true,
+    });
+
   return (
     <div className="rounded-xl border border-warm-200 bg-paper p-3.5">
       <p className="text-xs font-medium uppercase tracking-wide text-warm-400">
         Transfer to {name} to settle
       </p>
-      {iban ? (
-        <div className="mt-2 flex items-center justify-between gap-3">
-          <code className="truncate font-mono text-sm text-ink">
-            {formatIban(iban)}
-          </code>
-          <CopyButton value={iban} label="Copy IBAN" />
-        </div>
-      ) : (
+      {rows.length === 0 ? (
         <p className="mt-1.5 text-sm text-warm-400">
-          {name} hasn’t added an IBAN yet.
+          {name} hasn’t added payment details yet.
         </p>
+      ) : (
+        <dl className="mt-2.5 space-y-2.5">
+          {rows.map((r) => (
+            <div key={r.label} className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <dt className="text-[0.65rem] font-medium uppercase tracking-wide text-warm-400">
+                  {r.label}
+                </dt>
+                <dd
+                  className={`truncate text-sm text-ink ${r.mono ? "font-mono" : "font-medium"}`}
+                >
+                  {r.display}
+                </dd>
+              </div>
+              {r.copyValue && <CopyButton value={r.copyValue} label="Copy" />}
+            </div>
+          ))}
+        </dl>
       )}
     </div>
   );

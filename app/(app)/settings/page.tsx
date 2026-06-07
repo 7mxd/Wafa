@@ -1,14 +1,14 @@
-import { getMyIban } from "@/lib/actions/profile";
+import { getMyPaymentDetails } from "@/lib/actions/profile";
 import { getContacts } from "@/lib/loans";
 import { createClient } from "@/lib/supabase/server";
-import { IbanForm } from "@/components/iban-form";
+import { PaymentDetailsForm } from "@/components/payment-details-form";
 import { ContactsManager } from "@/components/contacts-manager";
 import { BackLink } from "@/components/back-link";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
-  const [iban, contacts] = await Promise.all([
-    getMyIban(),
+  const [payment, contacts] = await Promise.all([
+    getMyPaymentDetails(),
     getContacts(supabase),
   ]);
 
@@ -21,13 +21,13 @@ export default async function SettingsPage() {
       <p className="mt-1.5 text-sm text-warm-500">Your account details.</p>
 
       <section className="mt-5 rounded-2xl border border-warm-200 bg-card p-5 shadow-[0_10px_30px_-20px_rgba(36,58,138,0.22)] sm:p-6">
-        <h2 className="text-sm font-semibold text-ink">Your IBAN</h2>
+        <h2 className="text-sm font-semibold text-ink">Payment details</h2>
         <p className="mt-1 text-sm leading-relaxed text-warm-500">
           Shared with a borrower only after you approve their loan, so they can
-          transfer your repayment. It stays private otherwise.
+          repay you. Stays private otherwise. All fields are optional.
         </p>
         <div className="mt-4">
-          <IbanForm initialIban={iban} />
+          <PaymentDetailsForm initial={payment} />
         </div>
       </section>
 

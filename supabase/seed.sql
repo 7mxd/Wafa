@@ -32,9 +32,13 @@ insert into auth.identities (
    'email', now(), now(), now())
 on conflict do nothing;
 
--- IBANs (normalized: no spaces, uppercase).
-update public.profiles set iban = 'AE070331234567890123456' where id = '11111111-1111-1111-1111-111111111111';
-update public.profiles set iban = 'AE120030000012345678901' where id = '22222222-2222-2222-2222-222222222222';
+-- Payment details for the demo accounts (IBAN normalized: no spaces, uppercase).
+update public.profiles set iban = 'AE070331234567890123456',
+  account_holder_name = 'Aisha Rahman', bank_name = 'Emirates NBD'
+  where id = '11111111-1111-1111-1111-111111111111';
+update public.profiles set iban = 'AE120030000012345678901',
+  account_holder_name = 'Omar Haddad', bank_name = 'Abu Dhabi Commercial Bank'
+  where id = '22222222-2222-2222-2222-222222222222';
 
 -- Contacts: each demo user keeps the other in their personal list, so the
 -- new-request picker is populated for both.

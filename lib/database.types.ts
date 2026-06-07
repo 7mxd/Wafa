@@ -204,22 +204,34 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          bank_name: string | null
           created_at: string
           display_name: string
           iban: string | null
           id: string
+          swift_bic: string | null
         }
         Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          bank_name?: string | null
           created_at?: string
           display_name: string
           iban?: string | null
           id: string
+          swift_bic?: string | null
         }
         Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          bank_name?: string | null
           created_at?: string
           display_name?: string
           iban?: string | null
           id?: string
+          swift_bic?: string | null
         }
         Relationships: []
       }
@@ -271,10 +283,22 @@ export type Database = {
       }
       delete_loan: { Args: { p_loan_id: string }; Returns: undefined }
       get_lender_iban: { Args: { p_loan_id: string }; Returns: string }
+      get_lender_payment_details: { Args: { p_loan_id: string }; Returns: Json }
       get_my_iban: { Args: Record<PropertyKey, never>; Returns: string }
+      get_my_payment_details: { Args: Record<PropertyKey, never>; Returns: Json }
       mark_transferred: { Args: { p_loan_id: string }; Returns: undefined }
       remove_contact: { Args: { p_contact_id: string }; Returns: undefined }
       set_iban: { Args: { p_iban: string }; Returns: undefined }
+      set_payment_details: {
+        Args: {
+          p_account_holder_name?: string
+          p_account_number?: string
+          p_bank_name?: string
+          p_iban?: string
+          p_swift_bic?: string
+        }
+        Returns: undefined
+      }
       withdraw_loan: { Args: { p_loan_id: string }; Returns: undefined }
     }
     Enums: {

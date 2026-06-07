@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 import { getLoan, getLoanEvents } from "@/lib/loans";
+import { type PaymentDetails } from "@/lib/payment";
 import { StatusPill } from "@/components/status-pill";
 import { InterestFreeBadge } from "@/components/interest-free-badge";
 import { LoanActions } from "@/components/loan-actions";
@@ -29,13 +30,15 @@ export default async function LoanDetailPage({
   ]);
   if (!loan) notFound();
 
-  let lenderIban: string | null = null;
+  let lenderPayment: PaymentDetails | null = null;
   if (
     loan.role === "borrower" &&
     (loan.status === "active" || loan.status === "repaid_pending")
   ) {
-    const { data } = await supabase.rpc("get_lender_iban", { p_loan_id: id });
-    lenderIban = (data as string | null) ?? null;
+    const { data } = await supabase.rpc("get_lender_payment_details", {
+      p_loan_id: id,
+    });
+    lenderPayment = data ? (data as unknown as PaymentDetails) : null;
   }
 
   const verb = loan.role === "lender" ? "Lent to" : "Borrowed from";
@@ -130,7 +133,7 @@ export default async function LoanDetailPage({
           )}
 
           <div className="mt-5 border-t border-warm-100 pt-5">
-            <LoanActions loan={loan} lenderIban={lenderIban} />
+            <LoanActions loan={loan} lenderPayment={lenderPayment} />
           </div>
         </div>
       </div>
