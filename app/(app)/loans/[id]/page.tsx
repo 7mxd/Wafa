@@ -48,7 +48,7 @@ export default async function LoanDetailPage({
       <BackLink />
 
       <div className="mt-4 overflow-hidden rounded-2xl border border-warm-200 bg-card shadow-[0_12px_36px_-22px_rgba(36,58,138,0.28)]">
-        <div className="flex items-start justify-between gap-3 border-b border-warm-100 p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-3 border-b border-warm-100 bg-gradient-to-br from-brand-tint/60 via-transparent to-transparent p-5 sm:p-6">
           <div className="flex min-w-0 items-center gap-3">
             <Avatar name={loan.counterpartyName} size={44} />
             <div className="min-w-0">

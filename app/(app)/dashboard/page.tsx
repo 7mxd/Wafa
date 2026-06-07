@@ -53,27 +53,35 @@ export default async function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-5 py-7 sm:px-6 sm:py-8">
-      <section className="rounded-2xl border border-warm-200 bg-card p-5 shadow-[0_10px_30px_-20px_rgba(36,58,138,0.25)] sm:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="text-xs font-semibold uppercase tracking-wide text-warm-500">
+      <section className="grad-brand relative overflow-hidden rounded-3xl p-6 text-white shadow-[0_18px_44px_-20px_oklch(0.4_0.16_258/0.6)] sm:p-7">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full opacity-60 blur-2xl"
+          style={{
+            background:
+              "radial-gradient(closest-side, oklch(0.665 0.182 22 / 0.55), transparent)",
+          }}
+        />
+        <div className="relative flex items-center justify-between gap-3">
+          <h1 className="text-xs font-semibold uppercase tracking-wide text-white/70">
             Your ledger
           </h1>
           {needsYou > 0 ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-coral-tint px-2.5 py-1 text-xs font-semibold text-coral-strong ring-1 ring-inset ring-coral-line">
-              <span className="h-1.5 w-1.5 rounded-full bg-coral" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-coral px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
               {needsYou} need{needsYou === 1 ? "s" : ""} you
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-warm-400">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/75">
               <CheckIcon />
               All caught up
             </span>
           )}
         </div>
-        <div className="mt-4 grid grid-cols-3 divide-x divide-warm-200">
-          <Figure label="Owed to you" amount={owedToMeTotal} tone="brand" />
-          <Figure label="You owe" amount={iOweTotal} tone="ink" />
-          <Figure label="Net" amount={net} tone="net" signed />
+        <div className="relative mt-4 grid grid-cols-3 divide-x divide-white/15">
+          <Figure label="Owed to you" amount={owedToMeTotal} dot="bg-mint" />
+          <Figure label="You owe" amount={iOweTotal} dot="bg-coral" />
+          <Figure label="Net" amount={net} signed />
         </div>
       </section>
 
@@ -100,33 +108,24 @@ export default async function DashboardPage() {
 function Figure({
   label,
   amount,
-  tone,
+  dot,
   signed = false,
 }: {
   label: string;
   amount: number;
-  tone: "brand" | "ink" | "net";
+  dot?: string;
   signed?: boolean;
 }) {
-  const color =
-    tone === "brand"
-      ? "text-brand"
-      : tone === "net"
-        ? amount > 0
-          ? "text-brand"
-          : amount < 0
-            ? "text-coral-strong"
-            : "text-warm-500"
-        : "text-ink";
   return (
     <div className="px-3 first:pl-0 last:pr-0">
-      <p className="text-[0.68rem] font-medium uppercase tracking-wide text-warm-400">
+      <p className="flex items-center gap-1.5 text-[0.68rem] font-medium uppercase tracking-wide text-white/65">
+        {dot && <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />}
         {label}
       </p>
       <Money
         amount={amount}
         signed={signed}
-        className={`mt-1 block text-lg font-semibold sm:text-2xl ${color}`}
+        className="mt-1 block text-lg font-bold text-white sm:text-2xl"
       />
     </div>
   );

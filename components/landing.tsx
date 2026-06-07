@@ -48,19 +48,28 @@ function Hero() {
       {/* soft brand + coral auras behind the mark */}
       <div
         aria-hidden
-        className="anim-aura pointer-events-none absolute left-1/2 top-10 -z-10 h-64 w-64 -translate-x-1/2 rounded-full blur-2xl sm:top-16"
+        className="anim-aura pointer-events-none absolute left-1/2 top-8 -z-10 h-64 w-64 -translate-x-[125%] rounded-full blur-2xl sm:top-14"
         style={{
           background:
-            "radial-gradient(closest-side, oklch(0.665 0.182 22 / 0.30), transparent 70%)",
+            "radial-gradient(closest-side, oklch(0.665 0.182 22 / 0.38), transparent 70%)",
         }}
       />
       <div
         aria-hidden
-        className="anim-aura pointer-events-none absolute left-1/2 top-28 -z-10 h-72 w-80 -translate-x-[60%] rounded-full blur-2xl"
+        className="anim-aura pointer-events-none absolute left-1/2 top-12 -z-10 h-72 w-80 translate-x-[20%] rounded-full blur-2xl"
         style={{
           background:
-            "radial-gradient(closest-side, oklch(0.375 0.135 264 / 0.22), transparent 70%)",
-          animationDelay: "1.5s",
+            "radial-gradient(closest-side, oklch(0.55 0.19 258 / 0.30), transparent 70%)",
+          animationDelay: "1.2s",
+        }}
+      />
+      <div
+        aria-hidden
+        className="anim-aura pointer-events-none absolute left-1/2 top-32 -z-10 h-60 w-72 -translate-x-1/2 rounded-full blur-2xl"
+        style={{
+          background:
+            "radial-gradient(closest-side, oklch(0.79 0.14 70 / 0.26), transparent 70%)",
+          animationDelay: "2.2s",
         }}
       />
 
@@ -118,8 +127,14 @@ function Hero() {
 
 /* ── Value props ───────────────────────────────────────────── */
 
+const CHIP: Record<string, string> = {
+  brand: "bg-brand-tint text-brand ring-brand-line",
+  coral: "bg-coral-tint text-coral-strong ring-coral-line",
+  teal: "bg-teal-tint text-teal-strong ring-teal-line",
+};
+
 const VALUE_PROPS: {
-  tint: "brand" | "coral";
+  tint: "brand" | "coral" | "teal";
   icon: React.ReactNode;
   title: string;
   desc: string;
@@ -147,7 +162,7 @@ const VALUE_PROPS: {
     desc: "No money moves through Wafa. It holds the agreement, so nobody has to keep score.",
   },
   {
-    tint: "brand",
+    tint: "teal",
     icon: (
       <>
         <circle cx="6" cy="18" r="2" />
@@ -168,11 +183,7 @@ function ValueProps() {
           <Reveal key={p.title} delay={i * 90}>
             <div className="text-center sm:text-left">
               <span
-                className={`inline-grid h-11 w-11 place-items-center rounded-2xl ring-1 ring-inset ${
-                  p.tint === "coral"
-                    ? "bg-coral-tint text-coral-strong ring-coral-line"
-                    : "bg-brand-tint text-brand ring-brand-line"
-                }`}
+                className={`inline-grid h-11 w-11 place-items-center rounded-2xl ring-1 ring-inset ${CHIP[p.tint]}`}
               >
                 <svg
                   width="22"
@@ -354,7 +365,7 @@ function Glimpse() {
 function ClosingCta() {
   return (
     <section className="px-5 py-16 sm:px-8 sm:py-20">
-      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-brand px-6 py-16 text-center sm:py-20">
+      <div className="grad-brand relative mx-auto max-w-5xl overflow-hidden rounded-3xl px-6 py-16 text-center sm:py-20">
         <Image
           src="/wafa-mark.png"
           alt=""

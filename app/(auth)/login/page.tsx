@@ -11,7 +11,7 @@ export default async function LoginPage() {
   if (user) redirect("/dashboard");
 
   return (
-    <main className="flex min-h-full flex-1 items-center justify-center px-6 py-12">
+    <main className="mesh-joy flex min-h-full flex-1 items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
           <Logo variant="stacked" />
