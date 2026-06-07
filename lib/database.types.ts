@@ -223,7 +223,9 @@ export type Database = {
       }
       delete_loan: { Args: { p_loan_id: string }; Returns: undefined }
       get_lender_iban: { Args: { p_loan_id: string }; Returns: string }
+      get_my_iban: { Args: Record<PropertyKey, never>; Returns: string }
       mark_transferred: { Args: { p_loan_id: string }; Returns: undefined }
+      set_iban: { Args: { p_iban: string }; Returns: undefined }
       withdraw_loan: { Args: { p_loan_id: string }; Returns: undefined }
     }
     Enums: {

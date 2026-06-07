@@ -30,12 +30,17 @@ export function AppHeader({ email }: { email: string }) {
             <span className="sm:hidden">New</span>
           </Link>
 
-          <div className="hidden items-center gap-2.5 sm:flex">
+          <Link
+            href="/settings"
+            aria-label="Settings"
+            title="Settings"
+            className="flex items-center gap-2.5 rounded-lg focus-ring"
+          >
             <Avatar name={email} size={28} />
-            <span className="max-w-[11rem] truncate text-sm text-warm-500">
+            <span className="hidden max-w-[11rem] truncate text-sm text-warm-500 sm:inline">
               {email}
             </span>
-          </div>
+          </Link>
 
           <form action={signOut}>
             <button
