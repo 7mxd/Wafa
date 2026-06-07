@@ -22,6 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://wafa.7mxd.me"),
   title: "Wafa · interest-free loans between friends",
   description:
     "Lend to a friend, written down. Zero interest, qard-based: agreed, tracked, repaid.",
