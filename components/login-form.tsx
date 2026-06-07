@@ -10,6 +10,8 @@ const DEMO_PASSWORD = "Wafa-demo-1";
 const DEMO_ACCOUNTS = [
   { label: "Aisha", email: "aisha@wafa.test" },
   { label: "Omar", email: "omar@wafa.test" },
+  { label: "Layla", email: "layla@wafa.test" },
+  { label: "Yusuf", email: "yusuf@wafa.test" },
 ];
 
 export function LoginForm() {

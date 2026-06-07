@@ -1,6 +1,6 @@
 -- Wafa — demo seed: two test accounts + loans across every status.
 -- Run after the migrations (0001–0006). Idempotent for users; loans are reset.
--- Test accounts: aisha@wafa.test / omar@wafa.test, password "Wafa-demo-1".
+-- Test accounts: aisha@ / omar@ / layla@ / yusuf@wafa.test, password "Wafa-demo-1".
 
 -- 1) Auth users (GoTrue email/password) + identities. Trigger creates profiles.
 insert into auth.users (
@@ -18,7 +18,17 @@ insert into auth.users (
    'authenticated', 'authenticated', 'omar@wafa.test',
    extensions.crypt('Wafa-demo-1', extensions.gen_salt('bf')),
    now(), now(), now(),
-   '{"provider":"email","providers":["email"]}', '{"display_name":"Omar"}', '', '', '', '')
+   '{"provider":"email","providers":["email"]}', '{"display_name":"Omar"}', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000', '33333333-3333-3333-3333-333333333333',
+   'authenticated', 'authenticated', 'layla@wafa.test',
+   extensions.crypt('Wafa-demo-1', extensions.gen_salt('bf')),
+   now(), now(), now(),
+   '{"provider":"email","providers":["email"]}', '{"display_name":"Layla"}', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000', '44444444-4444-4444-4444-444444444444',
+   'authenticated', 'authenticated', 'yusuf@wafa.test',
+   extensions.crypt('Wafa-demo-1', extensions.gen_salt('bf')),
+   now(), now(), now(),
+   '{"provider":"email","providers":["email"]}', '{"display_name":"Yusuf"}', '', '', '', '')
 on conflict (id) do nothing;
 
 insert into auth.identities (
@@ -29,6 +39,12 @@ insert into auth.identities (
    'email', now(), now(), now()),
   (gen_random_uuid(), '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222',
    '{"sub":"22222222-2222-2222-2222-222222222222","email":"omar@wafa.test","email_verified":true,"phone_verified":false}',
+   'email', now(), now(), now()),
+  (gen_random_uuid(), '33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333',
+   '{"sub":"33333333-3333-3333-3333-333333333333","email":"layla@wafa.test","email_verified":true,"phone_verified":false}',
+   'email', now(), now(), now()),
+  (gen_random_uuid(), '44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444',
+   '{"sub":"44444444-4444-4444-4444-444444444444","email":"yusuf@wafa.test","email_verified":true,"phone_verified":false}',
    'email', now(), now(), now())
 on conflict do nothing;
 
@@ -39,9 +55,16 @@ update public.profiles set iban = 'AE070331234567890123456',
 update public.profiles set iban = 'AE120030000012345678901',
   account_holder_name = 'Omar Haddad', bank_name = 'Abu Dhabi Commercial Bank'
   where id = '22222222-2222-2222-2222-222222222222';
+update public.profiles set iban = 'AE262201647592038475610',
+  account_holder_name = 'Layla Karim', bank_name = 'Mashreq Bank'
+  where id = '33333333-3333-3333-3333-333333333333';
+update public.profiles set iban = 'AE720359182736450918273',
+  account_holder_name = 'Yusuf Idris', bank_name = 'First Abu Dhabi Bank'
+  where id = '44444444-4444-4444-4444-444444444444';
 
--- Contacts: each demo user keeps the other in their personal list, so the
--- new-request picker is populated for both.
+-- Contacts: Aisha and Omar keep each other in their lists so their pickers are
+-- populated. Layla and Yusuf start with an empty list on purpose — they exist to
+-- exercise the "add someone" flow from scratch.
 insert into public.contacts (owner_id, contact_id) values
   ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222'),
   ('22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111')
