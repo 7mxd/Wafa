@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Avatar } from "@/components/avatar";
+import { inputClass, labelClass, btnPrimary } from "@/lib/ui";
 
 const DEMO_PASSWORD = "Wafa-demo-1";
 const DEMO_ACCOUNTS = [
@@ -41,10 +43,10 @@ export function LoginForm() {
           ev.preventDefault();
           signIn(email, password);
         }}
-        className="space-y-3"
+        className="space-y-3.5"
       >
-        <div>
-          <label className="block text-xs font-medium text-stone-500" htmlFor="email">
+        <div className="space-y-1">
+          <label className={labelClass} htmlFor="email">
             Email
           </label>
           <input
@@ -53,12 +55,12 @@ export function LoginForm() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className={inputClass}
             placeholder="you@example.com"
           />
         </div>
-        <div>
-          <label className="block text-xs font-medium text-stone-500" htmlFor="password">
+        <div className="space-y-1">
+          <label className={labelClass} htmlFor="password">
             Password
           </label>
           <input
@@ -67,41 +69,47 @@ export function LoginForm() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className={inputClass}
             placeholder="Your password"
           />
         </div>
-        {error && <p className="text-sm text-rose-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
-        >
+        {error && (
+          <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+            {error}
+          </p>
+        )}
+        <button type="submit" disabled={loading} className={`${btnPrimary} w-full`}>
           {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>
 
       <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-stone-200" />
+        <div className="absolute inset-0 flex items-center" aria-hidden>
+          <div className="w-full border-t border-warm-200" />
         </div>
         <div className="relative flex justify-center">
-          <span className="bg-white px-2 text-xs text-stone-400">
-            or use a demo account
+          <span className="bg-card px-2.5 text-xs text-warm-400">
+            or try a demo account
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2.5">
         {DEMO_ACCOUNTS.map((acc) => (
           <button
             key={acc.email}
             type="button"
             disabled={loading}
             onClick={() => signIn(acc.email, DEMO_PASSWORD)}
-            className="rounded-lg border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:opacity-60"
+            className="flex items-center gap-2.5 rounded-xl border border-warm-300 bg-card px-3 py-2.5 text-left transition duration-150 ease-[var(--ease-out-quint)] hover:border-brand-line hover:bg-paper disabled:opacity-60 focus-ring"
           >
-            Sign in as {acc.label}
+            <Avatar name={acc.label} size={30} />
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold text-ink">
+                {acc.label}
+              </span>
+              <span className="block text-xs text-warm-400">Demo</span>
+            </span>
           </button>
         ))}
       </div>
