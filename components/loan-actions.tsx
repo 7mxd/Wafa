@@ -31,6 +31,7 @@ export function LoanActions({
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
+  const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [panel, setPanel] = useState<
     "none" | "counter" | "decline" | "delete"
@@ -41,20 +42,29 @@ export function LoanActions({
   const [cNote, setCNote] = useState("");
   const [dReason, setDReason] = useState("");
 
-  function run(fn: () => Promise<ActionResult>) {
+  // Which action is in flight, so only the clicked button spins while the others
+  // simply disable. `pending` spans the whole transition — the server action AND
+  // the route repaint its revalidatePath triggers — so the spinner stays up until
+  // the fresh UI is painted, not just until the network call returns.
+  const spinning = (key: string) => pending && busy === key;
+
+  function run(key: string, fn: () => Promise<ActionResult>) {
     setError(null);
+    setBusy(key);
     start(async () => {
       const res = await fn();
       if (res?.error) setError(res.error);
-      else {
-        setPanel("none");
-        router.refresh();
-      }
+      else setPanel("none");
+      // No router.refresh() here: every action's revalidatePath("/loans/<id>")
+      // already repaints this route when it resolves. The manual refresh just
+      // refetched the same page a second time, doubling how long the buttons
+      // stayed disabled.
     });
   }
 
   function remove() {
     setError(null);
+    setBusy("delete");
     start(async () => {
       const res = await deleteLoan(loan.id);
       if (res?.error) setError(res.error);
@@ -76,7 +86,11 @@ export function LoanActions({
       {/* pending */}
       {loan.status === "pending" && isLender && panel === "none" && (
         <div className="flex flex-wrap gap-2">
-          <Primary disabled={pending} onClick={() => run(() => approveLoan(loan.id))}>
+          <Primary
+            disabled={pending}
+            loading={spinning("approve")}
+            onClick={() => run("approve", () => approveLoan(loan.id))}
+          >
             Approve
           </Primary>
           <Secondary disabled={pending} onClick={() => setPanel("counter")}>
@@ -100,8 +114,9 @@ export function LoanActions({
           </Field>
           <Primary
             disabled={pending}
+            loading={spinning("counter")}
             onClick={() =>
-              run(() =>
+              run("counter", () =>
                 counterLoan(loan.id, {
                   amount: Number(cAmount),
                   dueDate: cDue || null,
@@ -119,7 +134,11 @@ export function LoanActions({
           <Field label="Reason (optional)">
             <input value={dReason} onChange={(e) => setDReason(e.target.value)} className={inputCls} placeholder="A short note…" />
           </Field>
-          <Danger disabled={pending} onClick={() => run(() => declineLoan(loan.id, dReason || null))}>
+          <Danger
+            disabled={pending}
+            loading={spinning("decline")}
+            onClick={() => run("decline", () => declineLoan(loan.id, dReason || null))}
+          >
             Confirm decline
           </Danger>
         </Panel>
@@ -127,7 +146,11 @@ export function LoanActions({
       {loan.status === "pending" && isBorrower && (
         <div className="space-y-2">
           <Waiting>Waiting for {loan.counterpartyName} to respond.</Waiting>
-          <Secondary disabled={pending} onClick={() => run(() => withdrawLoan(loan.id))}>
+          <Secondary
+            disabled={pending}
+            loading={spinning("withdraw")}
+            onClick={() => run("withdraw", () => withdrawLoan(loan.id))}
+          >
             Withdraw request
           </Secondary>
         </div>
@@ -141,10 +164,18 @@ export function LoanActions({
             {loan.counter_due_date ? ` · due ${formatDate(loan.counter_due_date)}` : ""}.
           </Waiting>
           <div className="flex flex-wrap gap-2">
-            <Primary disabled={pending} onClick={() => run(() => acceptCounter(loan.id))}>
+            <Primary
+              disabled={pending}
+              loading={spinning("accept")}
+              onClick={() => run("accept", () => acceptCounter(loan.id))}
+            >
               Accept counter
             </Primary>
-            <Secondary disabled={pending} onClick={() => run(() => withdrawLoan(loan.id))}>
+            <Secondary
+              disabled={pending}
+              loading={spinning("withdraw")}
+              onClick={() => run("withdraw", () => withdrawLoan(loan.id))}
+            >
               Withdraw
             </Secondary>
           </div>
@@ -161,7 +192,11 @@ export function LoanActions({
             payment={lenderPayment}
             name={loan.counterpartyName}
           />
-          <Primary disabled={pending} onClick={() => run(() => markTransferred(loan.id))}>
+          <Primary
+            disabled={pending}
+            loading={spinning("transfer")}
+            onClick={() => run("transfer", () => markTransferred(loan.id))}
+          >
             I’ve transferred
           </Primary>
         </div>
@@ -174,7 +209,11 @@ export function LoanActions({
       {loan.status === "repaid_pending" && isLender && (
         <div className="space-y-2">
           <Waiting>{loan.counterpartyName} marked the repayment as transferred.</Waiting>
-          <Primary disabled={pending} onClick={() => run(() => confirmSettled(loan.id))}>
+          <Primary
+            disabled={pending}
+            loading={spinning("confirm")}
+            onClick={() => run("confirm", () => confirmSettled(loan.id))}
+          >
             Confirm received
           </Primary>
         </div>
@@ -202,7 +241,7 @@ export function LoanActions({
               This permanently removes the loan and its timeline for both you and{" "}
               {loan.counterpartyName}. It can’t be undone.
             </p>
-            <Danger disabled={pending} onClick={remove}>
+            <Danger disabled={pending} loading={spinning("delete")} onClick={remove}>
               Delete permanently
             </Danger>
           </Panel>
@@ -225,23 +264,26 @@ export function LoanActions({
 
 /* — small presentational helpers — */
 
-function Primary({ children, ...rest }: ButtonProps) {
+function Primary({ children, loading, ...rest }: ButtonProps) {
   return (
     <button {...rest} className={btnPrimary}>
+      {loading && <Spinner />}
       {children}
     </button>
   );
 }
-function Secondary({ children, ...rest }: ButtonProps) {
+function Secondary({ children, loading, ...rest }: ButtonProps) {
   return (
     <button {...rest} className={btnSecondary}>
+      {loading && <Spinner />}
       {children}
     </button>
   );
 }
-function Danger({ children, ...rest }: ButtonProps) {
+function Danger({ children, loading, ...rest }: ButtonProps) {
   return (
     <button {...rest} className={btnDanger}>
+      {loading && <Spinner />}
       {children}
     </button>
   );
@@ -250,6 +292,7 @@ function Danger({ children, ...rest }: ButtonProps) {
 type ButtonProps = {
   children: ReactNode;
   disabled?: boolean;
+  loading?: boolean;
   onClick?: () => void;
 };
 
@@ -301,6 +344,34 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
       <span className="text-xs font-medium text-warm-500">{label}</span>
       {children}
     </label>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg
+      className="animate-spin"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        opacity="0.25"
+      />
+      <path
+        d="M21 12a9 9 0 0 0-9-9"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
