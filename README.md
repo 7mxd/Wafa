@@ -157,5 +157,6 @@ node scripts/screenshots.mjs  # Playwright drive-through of the whole flow (need
 ## Scope & roadmap
 
 The MVP is intentionally tight. Natural next steps: due-date reminders, partial/installment repayment,
-a shareable invite link for friends not yet on Wafa, lent-vs-borrowed stats, and — on the same
-request→confirm primitive — **gam'iya** (rotating savings circles), fair cost splits, and sadaqah pools.
+full Arabic localization and RTL layout (the identity is already bilingual), a shareable invite link
+for friends not yet on Wafa, lent-vs-borrowed stats, and — on the same request→confirm primitive —
+**gam'iya** (rotating savings circles), fair cost splits, and sadaqah pools.
