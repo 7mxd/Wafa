@@ -17,6 +17,8 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
 ## Live demo
 
 - **URL:** **https://wafa.7mxd.me** (also reachable at `https://wafa-lake.vercel.app`)
+- **Presentation:** [`Wafa-Presentation.pdf`](Wafa-Presentation.pdf) — a 12-slide walkthrough of the
+  problem, flow, security model, and design (source + build script in [`presentation/`](presentation/))
 - **Test accounts** (password `Wafa-demo-1` for all — or use the one-tap buttons on the sign-in page):
 
   | Name | Email |

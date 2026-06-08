@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Wafa — Project Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --sand: #f6f8fc;
+    --paper: #eef1f8;
+    --card: #ffffff;
+    --ink: #1f2433;
+    --brand: #243a8a;
+    --brand-bright: #2f55d4;
+    --coral: #ef5650;
+    --coral-strong: #c4332e;
+    --line: #e2e7f1;
+    --warm-700: #4a5269;
+    --warm-500: #6b7388;
+    --warm-400: #8a92a6;
+    --amber: #d97706;
+    --violet: #7c3aed;
+    --mint: #0e9f6e;
+    --rose: #be123c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #2a2f3a;
+    font-family: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .arabic { font-family: "IBM Plex Sans Arabic", sans-serif; direction: rtl; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  .slide {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: var(--sand);
+    padding: 60px 72px 56px;
+    display: flex;
+    flex-direction: column;
+    page-break-after: always;
+    break-after: page;
+  }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+
+  /* shared header / footer */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  .brandtag { display: flex; align-items: center; gap: 10px; }
+  .brandtag .wmk { font-weight: 800; font-size: 18px; color: var(--brand); letter-spacing: -0.01em; }
+  .brandtag .war { font-size: 18px; color: var(--coral); font-weight: 700; }
+  .brandtag .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); }
+  .topic { font-size: 13px; font-weight: 600; color: var(--warm-400); letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .footer {
+    position: absolute;
+    left: 72px; right: 72px; bottom: 26px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12.5px; color: var(--warm-400);
+  }
+  .footer .mono { font-size: 12px; color: var(--warm-500); }
+
+  .eyebrow {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--coral-strong);
+    margin-bottom: 14px;
+  }
+  h1.title {
+    font-size: 40px; font-weight: 800; color: var(--ink);
+    letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 14px;
+  }
+  .lead { font-size: 19px; line-height: 1.5; color: var(--warm-700); max-width: 60ch; }
+
+  .body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  /* cards & grids */
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 18px; padding: 24px 26px;
+    box-shadow: 0 18px 40px -30px rgba(36,58,138,0.35);
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  .card h3 { font-size: 18px; font-weight: 700; color: var(--brand); margin-bottom: 8px; letter-spacing: -0.01em; }
+  .card p { font-size: 15.5px; line-height: 1.5; color: var(--warm-700); }
+  .card .k { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--coral-strong); margin-bottom: 10px; }
+
+  ul.clean { list-style: none; }
+  ul.clean li { position: relative; padding-left: 22px; font-size: 16px; line-height: 1.5; color: var(--warm-700); margin-bottom: 11px; }
+  ul.clean li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--brand-bright); }
+  ul.clean li b { color: var(--ink); font-weight: 700; }
+
+  .frame {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+    background: var(--card); box-shadow: 0 24px 50px -30px rgba(36,58,138,0.45);
+  }
+  .frame img { display: block; width: 100%; object-fit: cover; object-position: top center; }
+
+  /* pills */
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 13px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    border: 1px solid var(--line); background: var(--card); color: var(--warm-700);
+  }
+  .chip .pin { width: 8px; height: 8px; border-radius: 50%; }
+  .chiprow { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat .n { font-family: "Geist Mono", monospace; font-size: 34px; font-weight: 600; color: var(--brand); letter-spacing: -0.02em; }
+  .stat .l { font-size: 14px; color: var(--warm-500); }
+
+  /* flow */
+  .flow { display: flex; align-items: stretch; gap: 0; margin-top: 6px; }
+  .step {
+    flex: 1; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 16px 16px; text-align: center;
+  }
+  .step .s { font-size: 16px; font-weight: 700; color: var(--ink); }
+  .step .d { font-size: 13px; color: var(--warm-500); margin-top: 4px; line-height: 1.35; }
+  .arrow { display: flex; align-items: center; color: var(--warm-400); font-size: 22px; padding: 0 10px; }
+
+  /* cover */
+  .cover { background: var(--sand); padding: 0; }
+  .cover .mesh {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 75% at 82% 18%, rgba(239,86,80,0.16), transparent 60%),
+      radial-gradient(70% 80% at 12% 88%, rgba(47,85,212,0.20), transparent 62%),
+      radial-gradient(50% 60% at 60% 60%, rgba(14,159,110,0.08), transparent 60%);
+  }
+  .cover .markwm {
+    position: absolute; right: -90px; top: 50%; transform: translateY(-50%);
+    width: 520px; opacity: 0.10;
+  }
+  .cover .inner {
+    position: relative; z-index: 2; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 96px;
+  }
+  .cover .wordmark-live { display: flex; align-items: baseline; gap: 22px; margin-bottom: 14px; }
+  .cover .wordmark-live .en { font-size: 104px; font-weight: 800; color: var(--brand); letter-spacing: -0.03em; line-height: 1; }
+  .cover .wordmark-live .ar { font-size: 86px; font-weight: 700; color: var(--coral); line-height: 1; }
+  .cover .promise { font-size: 26px; font-weight: 700; color: var(--brand); letter-spacing: -0.01em; }
+  .cover .sub { font-size: 19px; color: var(--warm-700); margin-top: 16px; max-width: 54ch; line-height: 1.5; }
+  .cover .band {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    background: linear-gradient(90deg, var(--brand) 0%, var(--brand-bright) 100%);
+    color: #fff; padding: 22px 96px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cover .band .who { font-size: 16px; font-weight: 600; }
+  .cover .band .who span { opacity: 0.7; font-weight: 400; }
+  .cover .band .url { font-family: "Geist Mono", monospace; font-size: 15px; font-weight: 500; }
+
+  .twoup { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; min-height: 0; }
+  .capt { font-size: 13.5px; color: var(--warm-500); margin-top: 9px; text-align: center; }
+  .capt b { color: var(--ink); font-weight: 700; }
+
+  .note { font-size: 15px; color: var(--warm-500); margin-top: 14px; line-height: 1.5; }
+  .note b { color: var(--brand); font-weight: 700; }
+
+  .seal {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(36,58,138,0.07); color: var(--brand);
+    font-size: 13.5px; font-weight: 700; border: 1px solid rgba(36,58,138,0.15);
+  }
+  .seal .cd { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); }
+</style>
+</head>
+<body>
+
+<!-- 1 · COVER -->
+<section class="slide cover">
+  <div class="mesh"></div>
+  <img class="markwm" src="../public/wafa-mark.png" alt="" />
+  <div class="inner">
+    <div class="wordmark-live"><span class="en">Wafa</span><span class="ar arabic">وفاء</span></div>
+    <div class="promise">Keep your word.</div>
+    <div class="sub">
+      A small, deployed <b>request &rarr; review &rarr; decision</b> app for interest-free
+      (<span class="arabic" style="font-size:19px">قرض حسن</span> · qard hasan) loans between friends.
+      A faithful, shared record of an agreement — not a place money moves.
+    </div>
+  </div>
+  <div class="band">
+    <div class="who">Project Presentation &nbsp;·&nbsp; <span>Take-home for Mal · built with Next.js, Supabase, Claude Code</span></div>
+    <div class="url">wafa.7mxd.me</div>
+  </div>
+</section>
+
+<!-- 2 · THE BRIEF -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">The brief, and the take</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">What was asked</div>
+    <h1 class="title">One approval flow, two kinds of users</h1>
+    <p class="lead">
+      The prompt: companies have no clean way to ask for something that needs approval — it is scattered
+      across email and chat. Build one <b>request &rarr; review &rarr; decision</b> flow, with a person who
+      requests and a person who approves.
+    </p>
+    <div class="grid2" style="margin-top:30px">
+      <div class="card">
+        <div class="k">My interpretation</div>
+        <p>
+          Mal is an AI-native, <b>Sharia-compliant fintech</b>. So I chose an approval flow that is native to
+          that world: a friend <b>requests a goodwill loan</b>, a friend <b>approves, counters, or declines</b>,
+          and it is tracked to repaid. Same primitive, a domain that actually resonates.
+        </p>
+      </div>
+      <div class="card">
+        <div class="k">Why it fits the assignment</div>
+        <p>
+          Two clear roles, <b>per loan</b> (anyone can be borrower or lender). A real decision with a real
+          counter-offer. A genuine pain — chasing a friend for money is awkward — solved by a written record,
+          not a feature pile.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>The brief &rarr; the take</span><span class="mono">02 / 12</span></div>
+</section>
+
+<!-- 3 · WHAT WAFA IS -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">The product</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">What Wafa is</div>
+    <h1 class="title">A shared ledger of a promise</h1>
+    <p class="lead">
+      Wafa records <i>qard hasan</i> — interest-free, goodwill loans between people who already trust each other.
+      It is a faithful, auditable log of an agreement: requested, approved or countered, transferred, repaid, confirmed.
+    </p>
+    <div class="grid3" style="margin-top:28px">
+      <div class="card">
+        <h3>Record, not a rail</h3>
+        <p><b>No money moves through Wafa.</b> A deliberate scoping choice that keeps it genuinely shippable and well clear of payments and regulatory scope — while still solving the real pain: the tracking.</p>
+      </div>
+      <div class="card">
+        <h3>Interest-free by design</h3>
+        <p>There is deliberately <b>no interest or markup column anywhere</b> in the schema. The qard-hasan identity is enforced by absence, not by a setting someone could flip.</p>
+      </div>
+      <div class="card">
+        <h3>Status before action</h3>
+        <p>Every screen first answers <b>“where does this stand, and is the ball in my court?”</b> Colour carries state, so you read a loan before you decide what to do with it.</p>
+      </div>
+    </div>
+    <div style="margin-top:26px"><span class="seal"><span class="cd"></span>interest-free · qard hasan — surfaced calmly and often</span></div>
+  </div>
+  <div class="footer"><span>The product</span><span class="mono">03 / 12</span></div>
+</section>
+
+<!-- 4 · THE FLOW -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">The flow</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Request &rarr; review &rarr; decision &rarr; settled</div>
+    <h1 class="title">One lifecycle, fully tracked</h1>
+    <div class="flow" style="margin-top:18px">
+      <div class="step"><div class="s">Request</div><div class="d">Borrower asks, in plain words</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="step"><div class="s">Review</div><div class="d">Approve · counter · decline</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="step"><div class="s">Active</div><div class="d">Agreed &amp; outstanding</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="step"><div class="s">Transferred</div><div class="d">Borrower marks it sent</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="step"><div class="s">Settled</div><div class="d">Lender confirms received</div></div>
+    </div>
+    <div class="grid2" style="margin-top:28px">
+      <div class="card">
+        <div class="k">Status speaks in colour</div>
+        <div class="chiprow">
+          <span class="chip"><span class="pin" style="background:var(--amber)"></span>Pending</span>
+          <span class="chip"><span class="pin" style="background:var(--coral)"></span>Countered — your move</span>
+          <span class="chip"><span class="pin" style="background:var(--brand)"></span>Active</span>
+          <span class="chip"><span class="pin" style="background:var(--violet)"></span>Awaiting confirmation</span>
+          <span class="chip"><span class="pin" style="background:var(--mint)"></span>Settled</span>
+          <span class="chip"><span class="pin" style="background:var(--rose)"></span>Declined</span>
+          <span class="chip"><span class="pin" style="background:var(--warm-400)"></span>Withdrawn</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="k">Two structural invariants</div>
+        <p>
+          <b>Single bounce:</b> the one allowed counter-offer is folded into the row, so a second counter is
+          structurally unreachable. <b>Every transition</b> writes an immutable row to an audit timeline both
+          parties can see.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>The flow</span><span class="mono">04 / 12</span></div>
+</section>
+
+<!-- 5 · SCREENS A -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">The product · in use</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Two columns: owed to me · I owe</div>
+    <h1 class="title" style="font-size:34px;margin-bottom:18px">The ledger, and a loan in detail</h1>
+    <div class="twoup">
+      <div>
+        <div class="frame"><img src="../screenshots/02-dashboard-omar.png" style="height:440px" alt="Dashboard ledger" /></div>
+        <div class="capt"><b>Dashboard.</b> The pending inbox and the two-column ledger.</div>
+      </div>
+      <div>
+        <div class="frame"><img src="../screenshots/05-loan-active-aisha.png" style="height:440px" alt="Active loan with payment details" /></div>
+        <div class="capt"><b>Active loan.</b> Repayment details to settle, plus the shared timeline.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>In use</span><span class="mono">05 / 12</span></div>
+</section>
+
+<!-- 6 · SCREENS B -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">The product · in use</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Describe it in plain words</div>
+    <h1 class="title" style="font-size:34px;margin-bottom:18px">AI-assisted request &amp; the pending review</h1>
+    <div class="twoup">
+      <div>
+        <div class="frame"><img src="../screenshots/06-new-ai-filled.png" style="height:440px" alt="AI-assisted request" /></div>
+        <div class="capt"><b>New request.</b> Free text &rarr; Claude structures amount, reason, due date. Form stays editable.</div>
+      </div>
+      <div>
+        <div class="frame"><img src="../screenshots/03-loan-pending-omar.png" style="height:440px" alt="Pending request, lender view" /></div>
+        <div class="capt"><b>Pending review.</b> The lender's view: approve, counter, or decline.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>In use</span><span class="mono">06 / 12</span></div>
+</section>
+
+<!-- 7 · SECURITY -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">Architecture &amp; security</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">The interesting part is the data layer</div>
+    <h1 class="title">Security that does not trust the client</h1>
+    <div class="grid2" style="margin-top:22px">
+      <div>
+        <ul class="clean">
+          <li><b>Every state transition is a Postgres <span class="mono" style="font-size:15px">SECURITY DEFINER</span> RPC.</b> It asserts the caller's role and the exact current status, then does the UPDATE and the audit INSERT atomically.</li>
+          <li><b>The <span class="mono" style="font-size:15px">loans</span> table has no write policy at all.</b> Direct inserts/updates/deletes are denied — the RPCs are the only write path, sidestepping the classic mis-scoped-RLS bug.</li>
+          <li><b>RLS scopes every read</b> to the loan's two parties.</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="clean">
+          <li><b>Payment details are column-protected.</b> Bank fields (IBAN, holder, SWIFT…) are unreadable directly; the lender's reach the borrower only via a definer RPC, <b>borrower-only and active-only</b>.</li>
+          <li><b>Single bounce is structural</b>, and <b>interest-free is enforced by absence</b> — no markup column exists.</li>
+          <li><b>An in-DB test harness verifies the guarantees</b> — wrong-party, wrong-status, RLS isolation, direct-write denial, IBAN rules.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid3" style="margin-top:24px">
+      <div class="card" style="padding:18px 22px"><div class="stat"><span class="n">11 / 11</span><span class="l">in-DB security guarantees pass</span></div></div>
+      <div class="card" style="padding:18px 22px"><div class="stat"><span class="n">0</span><span class="l">error-level advisor lints</span></div></div>
+      <div class="card" style="padding:18px 22px"><div class="stat"><span class="n">1</span><span class="l">deliberate write boundary (the RPCs)</span></div></div>
+    </div>
+  </div>
+  <div class="footer"><span>Architecture &amp; security</span><span class="mono">07 / 12</span></div>
+</section>
+
+<!-- 8 · AI -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">The AI touches</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Light, honest, never blocking</div>
+    <h1 class="title">Two AI touches — text and vision</h1>
+    <div class="grid2" style="margin-top:24px">
+      <div class="card">
+        <h3>Structure a request from plain words</h3>
+        <p>“Need 400 for a car repair, pay you back in two weeks.” A server-side Claude call turns it into amount / reason / due date, plus a plain-terms interest-free summary, and <b>pre-fills a fully editable form</b>.</p>
+      </div>
+      <div class="card">
+        <h3>Read payment details from a photo</h3>
+        <p>Snap a bank document in Settings; the same model reads it into the payment fields — again only pre-filling. <b>The image is used for that one call and never stored.</b></p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:22px;background:var(--paper);border-style:dashed">
+      <p style="font-size:16px">
+        <b style="color:var(--brand)">Deliberately non-blocking.</b> Each route has an <b>8-second timeout</b> and
+        <b>always returns HTTP 200</b> — a slow, missing, or erroring model never blocks anything. The UI simply
+        falls back to the manual form. Claude Haiku 4.5, via OpenRouter, server-side only.
+      </p>
+    </div>
+  </div>
+  <div class="footer"><span>The AI touches</span><span class="mono">08 / 12</span></div>
+</section>
+
+<!-- 9 · STACK -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">How it is built</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">The stack</div>
+    <h1 class="title">Shipped on the required tools</h1>
+    <div class="grid3" style="margin-top:24px">
+      <div class="card">
+        <h3>Next.js 16 · Vercel</h3>
+        <p>App Router, TypeScript, React Server Components + Server Actions. Every route paints an on-brand skeleton the instant it is clicked.</p>
+      </div>
+      <div class="card">
+        <h3>Supabase</h3>
+        <p>Postgres, Auth, and Row-Level Security. Seven migrations, a seed across every status, and an in-DB test harness.</p>
+      </div>
+      <div class="card">
+        <h3>Claude · Claude Code</h3>
+        <p>Claude Haiku 4.5 via OpenRouter for the two light AI touches. The app itself was built with Claude Code.</p>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:22px">
+      <div class="card">
+        <div class="k">Front of house</div>
+        <p>Tailwind CSS v4 with OKLCH tokens · three typefaces, each with a job (Hanken Grotesk, IBM Plex Sans Arabic, Geist Mono) · reduced-motion-safe throughout · mobile-first, excellent at 390px.</p>
+      </div>
+      <div class="card">
+        <div class="k">Verification</div>
+        <p>Standalone scripts for auth + RLS + IBAN protection, the full lifecycle over PostgREST, the AI structuring, and a Playwright drive-through that doubles as the screenshot generator.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>How it is built</span><span class="mono">09 / 12</span></div>
+</section>
+
+<!-- 10 · DESIGN -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">Design &amp; identity</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Warm and trustworthy, not a banking console</div>
+    <h1 class="title" style="font-size:34px;margin-bottom:16px">Bilingual by identity, mobile by default</h1>
+    <div class="twoup">
+      <div style="display:flex;flex-direction:column;gap:16px;justify-content:center">
+        <div class="card">
+          <h3>A fresh, bright canvas</h3>
+          <p>Deep-blue + coral brand DNA, with joyful accents (teal, amber, violet, mint) spent in committed colour moments — a gradient ledger band, mesh hero, gradient CTAs — never spread evenly.</p>
+        </div>
+        <div class="card">
+          <h3>Money lines up like a ledger</h3>
+          <p>Geist Mono with <span class="mono" style="font-size:14px">tabular-nums</span> for every figure and timestamp. The وفاء wordmark is set in IBM Plex Sans Arabic, <span class="mono" style="font-size:14px">dir="rtl"</span>.</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center">
+        <div class="frame" style="width:300px;border-radius:30px;padding:8px;background:#fff">
+          <img src="../screenshots/02b-dashboard-omar-mobile.png" style="height:520px;border-radius:24px" alt="Mobile dashboard" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Design &amp; identity</span><span class="mono">10 / 12</span></div>
+</section>
+
+<!-- 11 · SCOPE & JUDGMENT -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">Scope &amp; judgment</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">What I deliberately left out — and why</div>
+    <h1 class="title">Knowing what not to build</h1>
+    <p class="lead">The brief asked for something <b>small</b>. A take-home is partly a test of scoping judgment, so two tempting features were consciously deferred:</p>
+    <div class="grid2" style="margin-top:26px">
+      <div class="card">
+        <h3>Installment repayment</h3>
+        <p>“5,000, paid 2,500 + 2,500.” A natural pattern, but it lives entirely in the <b>post-decision tail</b> — furthest from the assessed flow — and adds real surface area. Named on the roadmap as a deliberate next step.</p>
+      </div>
+      <div class="card">
+        <h3>Public sign-up</h3>
+        <p>Wafa is inherently <b>two-sided</b> — a fresh sign-up lands on an empty dashboard with no counterparty. Curated demo accounts that already know each other show the product far better. Sign-up waits for a real invite story.</p>
+      </div>
+    </div>
+    <p class="note"><b>The point:</b> each decision keeps the one flow tight and well-built, rather than spreading effort thin across a longer feature list.</p>
+  </div>
+  <div class="footer"><span>Scope &amp; judgment</span><span class="mono">11 / 12</span></div>
+</section>
+
+<!-- 12 · CLOSE -->
+<section class="slide">
+  <div class="topbar">
+    <div class="brandtag"><span class="dot"></span><span class="wmk">Wafa</span><span class="war arabic">وفاء</span></div>
+    <div class="topic">Try it · roadmap</div>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Where it goes next</div>
+    <h1 class="title">Try it, and the road ahead</h1>
+    <div class="grid2" style="margin-top:22px">
+      <div class="card">
+        <div class="k">Live demo</div>
+        <p style="margin-bottom:8px">Open <b>wafa.7mxd.me</b> and sign in with one tap, or use any account below.</p>
+        <p style="margin-bottom:14px;font-size:14px;color:var(--warm-500)">Password for all accounts: <span class="mono" style="font-size:13px">Wafa-demo-1</span></p>
+        <div class="chiprow">
+          <span class="chip mono" style="font-size:13px">aisha@wafa.test</span>
+          <span class="chip mono" style="font-size:13px">omar@wafa.test</span>
+          <span class="chip mono" style="font-size:13px">layla@wafa.test</span>
+          <span class="chip mono" style="font-size:13px">yusuf@wafa.test</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="k">Natural next steps</div>
+        <ul class="clean" style="margin-top:2px">
+          <li>Due-date reminders &amp; <b>installment repayment</b></li>
+          <li>A <b>shareable invite link</b> for friends not yet on Wafa</li>
+          <li>Lent-vs-borrowed stats</li>
+          <li>On the same request&rarr;confirm primitive: <b>gam'iya</b> savings circles, fair cost splits, sadaqah pools</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:30px;display:flex;align-items:center;gap:14px">
+      <span class="arabic" style="font-size:40px;font-weight:700;color:var(--coral)">وفاء</span>
+      <span style="font-size:22px;font-weight:700;color:var(--brand)">— keep your word.</span>
+    </div>
+  </div>
+  <div class="footer"><span>Thank you</span><span class="mono">12 / 12</span></div>
+</section>
+
+</body>
+</html>
