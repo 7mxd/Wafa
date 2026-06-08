@@ -1,4 +1,4 @@
-# Wafa — وفاء
+# Wafa · وفاء
 
 **Zero-interest, qard-based lending between friends. Agreed, tracked, repaid.**
 
@@ -7,7 +7,7 @@ requests an interest-free loan ([qard hasan](https://en.wikipedia.org/wiki/Qardh
 lender **approves / counters / declines**, and the loan is tracked all the way to **settled** so
 nobody has to awkwardly chase a friend.
 
-It is a **record of agreement, not a payment processor** — no money moves through Wafa. That is a
+It is a **record of agreement, not a payment processor**. No money moves through Wafa. That is a
 deliberate scoping choice: it keeps the app genuinely shippable and well clear of payments and
 regulatory scope, while still solving the real pain (the *tracking*, not the transfer).
 
@@ -17,9 +17,9 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
 ## Live demo
 
 - **URL:** **https://wafa.7mxd.me** (also reachable at `https://wafa-lake.vercel.app`)
-- **Presentation:** [`Wafa-Presentation.pdf`](Wafa-Presentation.pdf) — a 12-slide walkthrough of the
+- **Presentation:** [`Wafa-Presentation.pdf`](Wafa-Presentation.pdf), a 12-slide walkthrough of the
   problem, flow, security model, and design (source + build script in [`presentation/`](presentation/))
-- **Test accounts** (password `Wafa-demo-1` for all — or use the one-tap buttons on the sign-in page):
+- **Test accounts** (password `Wafa-demo-1` for all, or use the one-tap buttons on the sign-in page):
 
   | Name | Email |
   |------|-------|
@@ -28,7 +28,7 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
 
 Aisha and Omar are seeded with loans on both sides (as borrower and as lender), so signing in as
 either one lets you walk the full request → approve/counter → transfer → confirm flow from both points
-of view. Two more accounts — **Layla** (`layla@wafa.test`) and **Yusuf** (`yusuf@wafa.test`) — start
+of view. Two more accounts, **Layla** (`layla@wafa.test`) and **Yusuf** (`yusuf@wafa.test`), start
 empty on purpose, to show adding a contact and making a first request from scratch.
 
 ## The flow
@@ -48,7 +48,7 @@ Every transition writes an immutable row to an audit timeline both parties can s
 
 ## Screenshots
 
-![Wafa landing — a promise, kept.](screenshots/00-landing-hero.png)
+![Wafa landing: a promise, kept.](screenshots/00-landing-hero.png)
 
 | The dashboard ledger | A loan and its timeline | AI-assisted request |
 |---|---|---|
@@ -57,18 +57,18 @@ Every transition writes an immutable row to an audit timeline both parties can s
 ## Tech stack
 
 - **Next.js 16** (App Router, TypeScript, Server Components + Server Actions) on **Vercel**
-- **Supabase** — Postgres, Auth, and Row-Level Security
+- **Supabase**: Postgres, Auth, and Row-Level Security
 - **Claude Haiku 4.5** via **OpenRouter** for two light, server-side AI touches (text + vision)
 - **Tailwind CSS v4**
 
 ## Design
 
-Wafa is bilingual by identity — **Wafa / وفاء** (faithfulness, keeping a promise) — and the interface
+Wafa is bilingual by identity, **Wafa / وفاء** (faithfulness, keeping a promise), and the interface
 is built to feel warm and trustworthy, not like a banking console.
 
 - **A fresh, bright canvas** with deep-blue + coral brand DNA and a joyful accent palette (teal, amber,
-  violet, mint), spent in committed colour moments — a gradient ledger band, mesh hero backdrops,
-  gradient CTAs — rather than spread evenly. Colours are OKLCH; neutrals carry a faint cool tint.
+  violet, mint), spent in committed colour moments (a gradient ledger band, mesh hero backdrops,
+  gradient CTAs) rather than spread evenly. Colours are OKLCH; neutrals carry a faint cool tint.
 - **Three typefaces, each with a job:** Hanken Grotesk (display + body), IBM Plex Sans Arabic (the وفاء
   wordmark, `dir="rtl"`), and Geist Mono for every figure and timestamp (`tabular-nums`), so money
   lines up like a ledger.
@@ -78,7 +78,7 @@ is built to feel warm and trustworthy, not like a banking console.
   (App Router `loading.tsx`), the per-request auth check is deduped, and all motion is disabled under
   `prefers-reduced-motion`.
 
-The full system — tokens, typography, motion, and the project-specific bans — lives in
+The full system (tokens, typography, motion, and the project-specific bans) lives in
 [`DESIGN.md`](DESIGN.md); the product thinking and flow rationale live in [`PRODUCT.md`](PRODUCT.md).
 
 ## Architecture & security
@@ -88,7 +88,7 @@ The interesting part is the data layer. The security model does not rely on the 
 - **Every state transition is a Postgres `SECURITY DEFINER` RPC** (`approve_loan`, `counter_loan`,
   `accept_counter`, `mark_transferred`, `confirm_settled`, …). Each asserts the caller's role and the
   exact current status, then performs the `UPDATE` **and** the audit-event `INSERT` atomically.
-- **`loans` has no `INSERT`/`UPDATE`/`DELETE` policy at all** — direct writes are denied; the RPCs are
+- **`loans` has no `INSERT`/`UPDATE`/`DELETE` policy at all**: direct writes are denied; the RPCs are
   the only write path. This sidesteps the classic mis-scoped-RLS-`UPDATE` bug. Deletion is no
   exception: a finished loan is removed through a `delete_loan` definer RPC, allowed only to the two
   parties and only on a terminal status (`settled` / `declined` / `withdrawn`).
@@ -98,9 +98,9 @@ The interesting part is the data layer. The security model does not rely on the 
   SWIFT/BIC) is unreadable directly. The lender's details reach the borrower only through a
   `get_lender_payment_details()` definer RPC, returned **only** to the borrower and **only** on an
   active loan.
-- **"Single bounce" is structural** — a counter is only allowed from `pending`, so a second counter is
+- **"Single bounce" is structural**: a counter is only allowed from `pending`, so a second counter is
   unreachable. No counter-count column needed.
-- **Interest-free is enforced by absence** — there is deliberately no interest/markup column anywhere.
+- **Interest-free is enforced by absence**: there is deliberately no interest/markup column anywhere.
 
 Supabase security advisors report **no error-level lints**. The remaining warnings are by design:
 every write runs through a `SECURITY DEFINER` RPC (the deliberate write boundary), which the linter
@@ -119,11 +119,11 @@ amount / reason / due date and a plain-terms interest-free summary, then **pre-f
 stays fully editable**.
 
 **Payment details from a photo (vision).** In Settings you can snap a photo of a bank document (an
-IBAN certificate, card, or statement) and the same model reads it into the payment-details fields —
+IBAN certificate, card, or statement) and the same model reads it into the payment-details fields,
 again only pre-filling an editable form. The image is used for that one call and is never stored.
 
 Both are deliberately non-blocking: each route has an 8-second timeout and **always returns HTTP
-200**, so a slow or unavailable model never blocks anything — the UI just falls back to the manual
+200**, so a slow or unavailable model never blocks anything, and the UI just falls back to the manual
 form.
 
 ## Local development
@@ -158,5 +158,5 @@ node scripts/screenshots.mjs  # Playwright drive-through of the whole flow (need
 
 The MVP is intentionally tight. Natural next steps: due-date reminders, partial/installment repayment,
 full Arabic localization and RTL layout (the identity is already bilingual), a shareable invite link
-for friends not yet on Wafa, lent-vs-borrowed stats, and — on the same request→confirm primitive —
+for friends not yet on Wafa, lent-vs-borrowed stats, and, on the same request→confirm primitive,
 **gam'iya** (rotating savings circles), fair cost splits, and sadaqah pools.

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Wafa — Project Presentation</title>
+<title>Wafa: Project Presentation</title>
 <style>
   /* Self-hosted so the PDF embeds these fonts deterministically: no network
      dependency at print time, identical rendering on every device (PC, iPhone). */
@@ -208,7 +208,7 @@
     <div class="sub">
       A small, deployed <b>request <svg class="rar" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg> review <svg class="rar" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg> decision</b> app for interest-free
       (<span class="arabic" style="font-size:19px">قرض حسن</span> · qard hasan) loans between friends.
-      A faithful, shared record of an agreement — not a place money moves.
+      A faithful, shared record of an agreement, not a place money moves.
     </div>
   </div>
   <div class="band">
@@ -227,7 +227,7 @@
     <div class="eyebrow">What was asked</div>
     <h1 class="title">One approval flow, two kinds of users</h1>
     <p class="lead">
-      The prompt: companies have no clean way to ask for something that needs approval — it is scattered
+      The prompt: companies have no clean way to ask for something that needs approval. It is scattered
       across email and chat. Build one <b>request <svg class="rar" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg> review <svg class="rar" viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg> decision</b> flow, with a person who
       requests and a person who approves.
     </p>
@@ -244,7 +244,7 @@
         <div class="k">Why it fits the assignment</div>
         <p>
           Two clear roles, <b>per loan</b> (anyone can be borrower or lender). A real decision with a real
-          counter-offer. A genuine pain — chasing a friend for money is awkward — solved by a written record,
+          counter-offer. A genuine pain: chasing a friend for money is awkward, solved by a written record,
           not a feature pile.
         </p>
       </div>
@@ -263,13 +263,13 @@
     <div class="eyebrow">What Wafa is</div>
     <h1 class="title">A shared ledger of a promise</h1>
     <p class="lead">
-      Wafa records <i>qard hasan</i> — interest-free, goodwill loans between people who already trust each other.
+      Wafa records <i>qard hasan</i>: interest-free, goodwill loans between people who already trust each other.
       It is a faithful, auditable log of an agreement: requested, approved or countered, transferred, repaid, confirmed.
     </p>
     <div class="grid3" style="margin-top:28px">
       <div class="card">
         <h3>Record, not a rail</h3>
-        <p><b>No money moves through Wafa.</b> A deliberate scoping choice that keeps it genuinely shippable and well clear of payments and regulatory scope — while still solving the real pain: the tracking.</p>
+        <p><b>No money moves through Wafa.</b> A deliberate scoping choice that keeps it genuinely shippable and well clear of payments and regulatory scope, while still solving the real pain: the tracking.</p>
       </div>
       <div class="card">
         <h3>Interest-free by design</h3>
@@ -280,7 +280,7 @@
         <p>Every screen first answers <b>“where does this stand, and is the ball in my court?”</b> Colour carries state, so you read a loan before you decide what to do with it.</p>
       </div>
     </div>
-    <div style="margin-top:26px"><span class="seal"><span class="cd"></span>interest-free · qard hasan — surfaced calmly and often</span></div>
+    <div style="margin-top:26px"><span class="seal"><span class="cd"></span>interest-free · qard hasan, surfaced calmly and often</span></div>
   </div>
   <div class="footer"><span>The product</span><span class="mono">03 / 12</span></div>
 </section>
@@ -310,7 +310,7 @@
         <div class="k">Status speaks in colour</div>
         <div class="chiprow">
           <span class="chip"><span class="pin" style="background:var(--amber)"></span>Pending</span>
-          <span class="chip"><span class="pin" style="background:var(--coral)"></span>Countered — your move</span>
+          <span class="chip"><span class="pin" style="background:var(--coral)"></span>Countered (your move)</span>
           <span class="chip"><span class="pin" style="background:var(--brand)"></span>Active</span>
           <span class="chip"><span class="pin" style="background:var(--violet)"></span>Awaiting confirmation</span>
           <span class="chip"><span class="pin" style="background:var(--mint)"></span>Settled</span>
@@ -390,15 +390,15 @@
       <div>
         <ul class="clean">
           <li><b>Every state transition is a Postgres <span class="mono" style="font-size:15px">SECURITY DEFINER</span> RPC.</b> It asserts the caller's role and the exact current status, then does the UPDATE and the audit INSERT atomically.</li>
-          <li><b>The <span class="mono" style="font-size:15px">loans</span> table has no write policy at all.</b> Direct inserts/updates/deletes are denied — the RPCs are the only write path, sidestepping the classic mis-scoped-RLS bug.</li>
+          <li><b>The <span class="mono" style="font-size:15px">loans</span> table has no write policy at all.</b> Direct inserts/updates/deletes are denied; the RPCs are the only write path, sidestepping the classic mis-scoped-RLS bug.</li>
           <li><b>RLS scopes every read</b> to the loan's two parties.</li>
         </ul>
       </div>
       <div>
         <ul class="clean">
           <li><b>Payment details are column-protected.</b> Bank fields (IBAN, holder, SWIFT…) are unreadable directly; the lender's reach the borrower only via a definer RPC, <b>borrower-only and active-only</b>.</li>
-          <li><b>Single bounce is structural</b>, and <b>interest-free is enforced by absence</b> — no markup column exists.</li>
-          <li><b>An in-DB test harness verifies the guarantees</b> — wrong-party, wrong-status, RLS isolation, direct-write denial, IBAN rules.</li>
+          <li><b>Single bounce is structural</b>, and <b>interest-free is enforced by absence</b>: no markup column exists.</li>
+          <li><b>An in-DB test harness verifies the guarantees</b>: wrong-party, wrong-status, RLS isolation, direct-write denial, IBAN rules.</li>
         </ul>
       </div>
     </div>
@@ -419,7 +419,7 @@
   </div>
   <div class="body">
     <div class="eyebrow">Light, honest, never blocking</div>
-    <h1 class="title">Two AI touches — text and vision</h1>
+    <h1 class="title">Two AI touches: text and vision</h1>
     <div class="grid2" style="margin-top:24px">
       <div class="card">
         <h3>Structure a request from plain words</h3>
@@ -427,13 +427,13 @@
       </div>
       <div class="card">
         <h3>Read payment details from a photo</h3>
-        <p>Snap a bank document in Settings; the same model reads it into the payment fields — again only pre-filling. <b>The image is used for that one call and never stored.</b></p>
+        <p>Snap a bank document in Settings; the same model reads it into the payment fields, again only pre-filling. <b>The image is used for that one call and never stored.</b></p>
       </div>
     </div>
     <div class="card" style="margin-top:22px;background:var(--paper);border-style:dashed">
       <p style="font-size:16px">
         <b style="color:var(--brand)">Deliberately non-blocking.</b> Each route has an <b>8-second timeout</b> and
-        <b>always returns HTTP 200</b> — a slow, missing, or erroring model never blocks anything. The UI simply
+        <b>always returns HTTP 200</b>, so a slow, missing, or erroring model never blocks anything. The UI simply
         falls back to the manual form. Claude Haiku 4.5, via OpenRouter, server-side only.
       </p>
     </div>
@@ -491,7 +491,7 @@
       <div style="display:flex;flex-direction:column;gap:16px;justify-content:center">
         <div class="card">
           <h3>A fresh, bright canvas</h3>
-          <p>Deep-blue + coral brand DNA, with joyful accents (teal, amber, violet, mint) spent in committed colour moments — a gradient ledger band, mesh hero, gradient CTAs — never spread evenly.</p>
+          <p>Deep-blue + coral brand DNA, with joyful accents (teal, amber, violet, mint) spent in committed colour moments (a gradient ledger band, mesh hero, gradient CTAs), never spread evenly.</p>
         </div>
         <div class="card">
           <h3>Money lines up like a ledger</h3>
@@ -515,17 +515,17 @@
     <div class="topic">Scope &amp; judgment</div>
   </div>
   <div class="body">
-    <div class="eyebrow">What I deliberately left out — and why</div>
+    <div class="eyebrow">What I deliberately left out, and why</div>
     <h1 class="title">Knowing what not to build</h1>
     <p class="lead">The brief asked for something <b>small</b>. A take-home is partly a test of scoping judgment, so two tempting features were consciously deferred:</p>
     <div class="grid2" style="margin-top:26px">
       <div class="card">
         <h3>Installment repayment</h3>
-        <p>“5,000, paid 2,500 + 2,500.” A natural pattern, but it lives entirely in the <b>post-decision tail</b> — furthest from the assessed flow — and adds real surface area. Named on the roadmap as a deliberate next step.</p>
+        <p>“5,000, paid 2,500 + 2,500.” A natural pattern, but it lives entirely in the <b>post-decision tail</b> (furthest from the assessed flow) and adds real surface area. Named on the roadmap as a deliberate next step.</p>
       </div>
       <div class="card">
         <h3>Public sign-up</h3>
-        <p>Wafa is inherently <b>two-sided</b> — a fresh sign-up lands on an empty dashboard with no counterparty. Curated demo accounts that already know each other show the product far better. Sign-up waits for a real invite story.</p>
+        <p>Wafa is inherently <b>two-sided</b>: a fresh sign-up lands on an empty dashboard with no counterparty. Curated demo accounts that already know each other show the product far better. Sign-up waits for a real invite story.</p>
       </div>
     </div>
     <p class="note"><b>The point:</b> each decision keeps the one flow tight and well-built, rather than spreading effort thin across a longer feature list.</p>
@@ -566,7 +566,7 @@
     </div>
     <div style="margin-top:30px;display:flex;align-items:center;gap:14px">
       <span class="arabic" style="font-size:40px;font-weight:700;color:var(--coral)">وفاء</span>
-      <span style="font-size:22px;font-weight:700;color:var(--brand)">— keep your word.</span>
+      <span style="font-size:22px;font-weight:700;color:var(--brand)">Keep your word.</span>
     </div>
   </div>
   <div class="footer"><span>Thank you</span><span class="mono">12 / 12</span></div>
