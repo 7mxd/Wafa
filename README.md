@@ -25,6 +25,8 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
   |------|-------|
   | Aisha | `aisha@wafa.test` |
   | Omar | `omar@wafa.test` |
+  | Layla | `layla@wafa.test` |
+  | Yusuf | `yusuf@wafa.test` |
 
 Roles are per loan, so the same account can be the borrower on one loan and the lender on another.
 Sign in as any account to walk the full request → approve/counter → transfer → confirm flow from both
