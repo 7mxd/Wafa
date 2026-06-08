@@ -14,12 +14,19 @@ const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "networkidle" });
 
-// Make sure the web fonts have actually loaded before we print, otherwise the
-// first render can fall back to system fonts.
+// Make sure every face has actually loaded and parsed before we print, so the
+// PDF embeds the real fonts instead of falling back to a system font.
 await page.evaluate(async () => {
+  const faces = [
+    '400 16px "Hanken Grotesk"', '500 16px "Hanken Grotesk"', '600 16px "Hanken Grotesk"',
+    '700 16px "Hanken Grotesk"', '800 16px "Hanken Grotesk"',
+    '400 16px "Geist Mono"', '500 16px "Geist Mono"', '600 16px "Geist Mono"',
+    '500 16px "IBM Plex Sans Arabic"', '600 16px "IBM Plex Sans Arabic"', '700 16px "IBM Plex Sans Arabic"',
+  ];
+  await Promise.all(faces.map((f) => document.fonts.load(f, "وفاء Wafa 0123")));
   await document.fonts.ready;
 });
-await page.waitForTimeout(400);
+await page.waitForTimeout(200);
 
 await page.pdf({
   path: outPath,
