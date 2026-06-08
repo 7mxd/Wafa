@@ -26,10 +26,9 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
   | Aisha | `aisha@wafa.test` |
   | Omar | `omar@wafa.test` |
 
-Aisha and Omar are seeded with loans on both sides (as borrower and as lender), so signing in as
-either one lets you walk the full request → approve/counter → transfer → confirm flow from both points
-of view. Two more accounts, **Layla** (`layla@wafa.test`) and **Yusuf** (`yusuf@wafa.test`), start
-empty on purpose, to show adding a contact and making a first request from scratch.
+Roles are per loan, so the same account can be the borrower on one loan and the lender on another.
+Sign in as any account to walk the full request → approve/counter → transfer → confirm flow from both
+sides, create a new request, or add a contact to start a loan from scratch.
 
 ## The flow
 
