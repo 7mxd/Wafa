@@ -1,5 +1,5 @@
 -- Wafa — demo seed: two test accounts + loans across every status.
--- Run after the migrations (0001–0006). Idempotent for users; loans are reset.
+-- Run after the migrations (0001–0007). Idempotent for users; loans are reset.
 -- Test accounts: aisha@ / omar@ / layla@ / yusuf@wafa.test, password "Wafa-demo-1".
 
 -- 1) Auth users (GoTrue email/password) + identities. Trigger creates profiles.

@@ -17,16 +17,17 @@ regulatory scope, while still solving the real pain (the *tracking*, not the tra
 ## Live demo
 
 - **URL:** **https://wafa.7mxd.me** (also reachable at `https://wafa-lake.vercel.app`)
-- **Test accounts** (password `Wafa-demo-1` for both — or use the one-tap buttons on the sign-in page):
+- **Test accounts** (password `Wafa-demo-1` for all — or use the one-tap buttons on the sign-in page):
 
   | Name | Email |
   |------|-------|
   | Aisha | `aisha@wafa.test` |
   | Omar | `omar@wafa.test` |
 
-Both accounts are seeded with loans on both sides (as borrower and as lender). Signing in as either
-one lets you walk the full request → approve/counter → transfer → confirm flow from both points of
-view.
+Aisha and Omar are seeded with loans on both sides (as borrower and as lender), so signing in as
+either one lets you walk the full request → approve/counter → transfer → confirm flow from both points
+of view. Two more accounts — **Layla** (`layla@wafa.test`) and **Yusuf** (`yusuf@wafa.test`) — start
+empty on purpose, to show adding a contact and making a first request from scratch.
 
 ## The flow
 
@@ -55,7 +56,7 @@ Every transition writes an immutable row to an audit timeline both parties can s
 
 - **Next.js 16** (App Router, TypeScript, Server Components + Server Actions) on **Vercel**
 - **Supabase** — Postgres, Auth, and Row-Level Security
-- **Claude Haiku 4.5** via **OpenRouter** for one light, server-side AI touch
+- **Claude Haiku 4.5** via **OpenRouter** for two light, server-side AI touches (text + vision)
 - **Tailwind CSS v4**
 
 ## Design
@@ -90,9 +91,11 @@ The interesting part is the data layer. The security model does not rely on the 
   exception: a finished loan is removed through a `delete_loan` definer RPC, allowed only to the two
   parties and only on a terminal status (`settled` / `declined` / `withdrawn`).
 - **RLS** scopes every read to the loan's two parties (`auth.uid() in (borrower_id, lender_id)`).
-- **IBANs are column-protected.** `SELECT` on `profiles.iban` is revoked from clients; the lender's
-  IBAN is reachable only through a `get_lender_iban()` definer RPC that returns it **only** to the
-  borrower, and **only** on an active loan.
+- **Payment details are column-protected.** Clients are granted `SELECT` on only `(id, display_name,
+  created_at)`, so every sensitive bank column (IBAN, account holder, bank name, account number,
+  SWIFT/BIC) is unreadable directly. The lender's details reach the borrower only through a
+  `get_lender_payment_details()` definer RPC, returned **only** to the borrower and **only** on an
+  active loan.
 - **"Single bounce" is structural** — a counter is only allowed from `pending`, so a second counter is
   unreachable. No counter-count column needed.
 - **Interest-free is enforced by absence** — there is deliberately no interest/markup column anywhere.
@@ -106,14 +109,20 @@ direct-write denial, …).
 
 The migrations, seed, and tests live in [`supabase/`](supabase/).
 
-## The AI touch (light, non-blocking)
+## The AI touches (light, non-blocking)
 
-On the request screen you can describe the loan in plain words ("need 400 for a car repair, pay you
-back in two weeks"). A server-side call to Claude structures it into amount / reason / due date and a
-plain-terms interest-free summary, then **pre-fills the form, which stays fully editable**.
+**Request structuring (text).** On the request screen you can describe the loan in plain words ("need
+400 for a car repair, pay you back in two weeks"). A server-side call to Claude structures it into
+amount / reason / due date and a plain-terms interest-free summary, then **pre-fills the form, which
+stays fully editable**.
 
-It is deliberately non-blocking: the route has an 8-second timeout and **always returns HTTP 200**, so
-a slow or unavailable model never blocks anything — the UI just falls back to the manual form.
+**Payment details from a photo (vision).** In Settings you can snap a photo of a bank document (an
+IBAN certificate, card, or statement) and the same model reads it into the payment-details fields —
+again only pre-filling an editable form. The image is used for that one call and is never stored.
+
+Both are deliberately non-blocking: each route has an 8-second timeout and **always returns HTTP
+200**, so a slow or unavailable model never blocks anything — the UI just falls back to the manual
+form.
 
 ## Local development
 
