@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createRequest } from "@/lib/actions/loans";
 import { addContactByEmail } from "@/lib/actions/contacts";
 import { inputClass, labelClass, btnPrimary, btnCoral } from "@/lib/ui";
+import { InterestFreeBadge } from "@/components/interest-free-badge";
 
 type Person = { id: string; display_name: string };
 
@@ -230,9 +231,12 @@ export function NewRequestForm({ people: initialPeople }: { people: Person[] }) 
         <button type="submit" disabled={pending} className={`${btnPrimary} w-full`}>
           {pending ? "Sending…" : "Send request"}
         </button>
-        <p className="text-center text-xs text-warm-400">
-          Interest-free by design. You’ll never owe more than you borrow.
-        </p>
+        <div className="flex flex-col items-center gap-2 pt-0.5">
+          <InterestFreeBadge />
+          <p className="text-center text-xs text-warm-400">
+            You’ll never owe more than you borrow.
+          </p>
+        </div>
       </form>
 
       {addOpen && (

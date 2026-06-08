@@ -29,7 +29,7 @@ const system =
   "You convert a borrower's free-text request for an interest-free loan between friends into structured JSON. " +
   `Today's date is ${TODAY}. Resolve relative dates to an absolute YYYY-MM-DD. ` +
   "Currency is always AED. If no due date is mentioned, use an empty string for proposed_due_date. " +
-  "The summary must be one short line, plain language, and must explicitly state the loan is interest-free (qard hasan) with no markup. " +
+  "The summary must be one short line in plain language describing the amount, what it is for, and the timeframe. Do NOT restate that the loan is interest-free, qard hasan, or free of markup; the interface conveys that separately. " +
   'Respond with ONLY a JSON object with keys: {"amount": number, "currency": "AED", "reason": string, "proposed_due_date": string, "summary": string}.';
 
 async function structure(text) {
